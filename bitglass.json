@@ -924,7 +924,7 @@
             },
             {
                 "module": "importlib_metadata",
-                "input_file": "wheels/importlib_metadata-4.8.1-py3-none-any.whl"
+                "input_file": "wheels/importlib_metadata-4.8.2-py3-none-any.whl"
             },
             {
                 "module": "itsdangerous",
@@ -940,7 +940,7 @@
             },
             {
                 "module": "soupsieve",
-                "input_file": "wheels/soupsieve-2.2.1-py3-none-any.whl"
+                "input_file": "wheels/soupsieve-2.3-py3-none-any.whl"
             },
             {
                 "module": "typing_extensions",
