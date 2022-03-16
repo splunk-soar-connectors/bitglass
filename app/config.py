@@ -7,16 +7,16 @@
 Author: eng@bitglass.com
 """
 
-import json
-import time
-import os
-from contextlib import contextmanager
 import copy
-from datetime import datetime
-import re
+import json
 import optparse
-from six import PY2, iteritems, string_types
+import os
+import re
+import time
+from contextlib import contextmanager
+from datetime import datetime
 
+from six import PY2, iteritems, string_types
 
 # HACK Avoid dependency on package app/ so it's monkey-patched from there, for the sake of CLI script
 _log = None

@@ -7,11 +7,10 @@
 Author: eng@bitglass.com
 """
 
-import sys
+import json
 import logging
 import logging.handlers
-import json
-
+import sys
 from datetime import datetime
 
 # Priority <xy> is already prepended by logging.handlers.emit()

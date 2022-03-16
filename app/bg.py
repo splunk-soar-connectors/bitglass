@@ -7,13 +7,12 @@
 Author: eng@bitglass.com
 """
 
-import sys
-import os
 import json
+import os
+import sys
 
 from six import PY2
 from six.moves import socketserver
-
 
 if PY2:
     import urllib2 as urllib
@@ -25,21 +24,21 @@ else:
     # if imported here globally (to move the failure earlier)
     # import requests_oauth2
 
-
 import base64
-
-import time
 import copy
-from threading import Thread, Condition
-from datetime import datetime, timedelta
 import logging
+import time
+from datetime import datetime, timedelta
+from threading import Condition, Thread
+
+import app.configForward
+import app.env
+import app.logevent
+from app.config import byteify, open_atomic, startConf
+
 # from threading import get_ident
 
 
-import app.env
-from app.config import byteify, open_atomic, startConf
-import app.configForward
-import app.logevent
 
 
 logger = None

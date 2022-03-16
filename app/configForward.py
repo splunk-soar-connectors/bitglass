@@ -234,7 +234,7 @@ class ConfigForward(Config):
         pxd = self._parseProxies(s)
         for p in pxd:
             k = '%s' % p['schema']
-            v = '%s://%s:%s@%s:%s' % (p['schema_p'], p['user'], p['pswd'], p['host'], p['port'])
+            v = '%s://%s:%s@%s:%s' % (p['schema_p'], p['user'], p['pswd'], p['host'], p['port'])  # pragma: allowlist secret
             if v[-1] == ':':
                 # Empty port
                 v = v[0:-1]

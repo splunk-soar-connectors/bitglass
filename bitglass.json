@@ -10,12 +10,12 @@
     "python_version": "3",
     "product_version_regex": ".*",
     "publisher": "Bitglass Inc.",
-    "license": "Copyright (c) 2021 Bitglass App Inc.",
+    "license": "Copyright (c) 2022 Bitglass App Inc.",
     "app_version": "1.0.11",
     "utctime_updated": "2022-01-07T21:14:11.000000Z",
     "package_name": "phantom_bitglass",
     "main_module": "bitglass_connector.py",
-    "min_phantom_version": "4.10.0.40961",
+    "min_phantom_version": "5.1.0",
     "app_wizard_version": "1.0.0",
     "configuration": {
         "auth_token": {
@@ -896,7 +896,7 @@
             },
             {
                 "module": "Werkzeug",
-                "input_file": "wheels/py3/Werkzeug-2.0.2-py3-none-any.whl"
+                "input_file": "wheels/py3/Werkzeug-2.0.3-py3-none-any.whl"
             },
             {
                 "module": "beautifulsoup4",
@@ -912,7 +912,7 @@
             },
             {
                 "module": "click",
-                "input_file": "wheels/py3/click-8.0.3-py3-none-any.whl"
+                "input_file": "wheels/py3/click-8.0.4-py3-none-any.whl"
             },
             {
                 "module": "dataclasses",
@@ -944,7 +944,7 @@
             },
             {
                 "module": "typing_extensions",
-                "input_file": "wheels/py3/typing_extensions-4.0.1-py3-none-any.whl"
+                "input_file": "wheels/py3/typing_extensions-4.1.1-py3-none-any.whl"
             },
             {
                 "module": "urllib3",
@@ -968,11 +968,11 @@
             },
             {
                 "module": "MarkupSafe",
-                "input_file": "wheels/py39/MarkupSafe-2.0.1-cp39-cp39-manylinux_2_5_x86_64.manylinux1_x86_64.manylinux_2_12_x86_64.manylinux2010_x86_64.manylinux_2_17_x86_64.manylinux2014_x86_64.whl"
+                "input_file": "wheels/py39/MarkupSafe-2.1.1-cp39-cp39-manylinux_2_17_x86_64.manylinux2014_x86_64.whl"
             },
             {
                 "module": "Werkzeug",
-                "input_file": "wheels/py3/Werkzeug-2.0.2-py3-none-any.whl"
+                "input_file": "wheels/py3/Werkzeug-2.0.3-py3-none-any.whl"
             },
             {
                 "module": "beautifulsoup4",
@@ -988,7 +988,7 @@
             },
             {
                 "module": "click",
-                "input_file": "wheels/py3/click-8.0.3-py3-none-any.whl"
+                "input_file": "wheels/py3/click-8.0.4-py3-none-any.whl"
             },
             {
                 "module": "idna",
@@ -996,7 +996,7 @@
             },
             {
                 "module": "itsdangerous",
-                "input_file": "wheels/py3/itsdangerous-2.0.1-py3-none-any.whl"
+                "input_file": "wheels/py3/itsdangerous-2.1.1-py3-none-any.whl"
             },
             {
                 "module": "requests",

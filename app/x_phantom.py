@@ -8,24 +8,22 @@ from __future__ import print_function, unicode_literals
 # Phantom App imports
 try:
     import phantom.app as phantom
-    from phantom.base_connector import BaseConnector
     from phantom.action_result import ActionResult
+    from phantom.base_connector import BaseConnector
     underphantom = True
 except ImportError:
     underphantom = False
     from test.actions import phantom, BaseConnector, ActionResult
 
-
-import os
-import requests
 import json
-from datetime import datetime
+import os
 import re
+from datetime import datetime
+
+import requests
 from bs4 import BeautifulSoup
 
-
 from app.bg import bitglassapi as bgapi
-
 
 # TODO ?? Usage of the consts file is recommended
 # from bitglass_consts import *
