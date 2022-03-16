@@ -1,6 +1,16 @@
 # File: app/bg.py
 #
-# Licensed under Apache 2.0 (https://www.apache.org/licenses/LICENSE-2.0.txt)
+# Licensed under the Apache License, Version 2.0 (the "License");
+# you may not use this file except in compliance with the License.
+# You may obtain a copy of the License at
+#
+#     http://www.apache.org/licenses/LICENSE-2.0
+#
+# Unless required by applicable law or agreed to in writing, software distributed under
+# the License is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND,
+# either express or implied. See the License for the specific language governing permissions
+# and limitations under the License.
+#
 
 """
 (C) Copyright Bitglass Inc. 2021. All Rights Reserved.
@@ -37,9 +47,6 @@ import app.logevent
 from app.config import byteify, open_atomic, startConf
 
 # from threading import get_ident
-
-
-
 
 logger = None
 conf = None
@@ -456,8 +463,7 @@ def restCall(_,
         auth_type = 'Basic'
 
         # Must have creds supplied for basic
-        if (username is None or username == '' or
-                password is None or password == ''):
+        if (username is None or username == '' or password is None or password == ''):
             # Emulate an http error instead of calling with empty password (when the form initially loads)
             # to avoid counting against API count quota
             raise HTTPError(url + endpoint, 401, SKIPPED_REQUEST_ERROR, {}, None)
@@ -626,9 +632,8 @@ def drainLogEvents(ctx, dtime, conf, logType, logData=None, nextPageToken=None):
                     else:
                         d[u'nextpagetoken'] = nextPageToken
 
-                    if (tm > logTime or
-                            # This is to avoid the possible +1 sec skipping data problem (if no npt)
-                            not isNewLogType):
+                    # This is to avoid the possible +1 sec skipping data problem (if no npt)
+                    if (tm > logTime or not isNewLogType):
                         logTime = tm
                         lastLog = d
                         # json.dumps(d, sort_keys=False, indent=4, separators = (',', ': '))
@@ -735,7 +740,7 @@ def PollLogs(ctx, conf, log_types=None, condition=Condition()):
                     npt[log_type] = lastLogFile.get('nextpagetoken', log_type)
                     if npt[log_type] == '':
                         npt[log_type] = None
-                except Exception as ex:
+                except Exception:
                     npt[log_type] = None
 
                 d = strptime(lastLogFile.get('time', log_type))
@@ -765,8 +770,7 @@ def PollLogs(ctx, conf, log_types=None, condition=Condition()):
     # Assume syslog daemon
     # TODO Add a mechanism to stop to switch back to API poll mode, restart is
     # required for now (after manual config edit)
-    isSyslog = ('://' not in conf.api_url and
-                len(conf.api_url.split(':')) == 2)
+    isSyslog = ('://' not in conf.api_url and len(conf.api_url.split(':')) == 2)
     res = None
     if isSyslog:
         host, port = conf.api_url.split(':')
@@ -792,6 +796,7 @@ def PollLogs(ctx, conf, log_types=None, condition=Condition()):
     logger.info('Polling: stop polling log events.. pid=%s, tid=%s' % (pid, tid))
     logger.info('~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~')
     return res
+
 
 class bitglassapi:
 

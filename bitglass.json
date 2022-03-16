@@ -10,7 +10,7 @@
     "python_version": "3",
     "product_version_regex": ".*",
     "publisher": "Bitglass Inc.",
-    "license": "Copyright (c) 2022 Bitglass App Inc.",
+    "license": "Copyright (c) 2021-2022 Bitglass App Inc.",
     "app_version": "1.0.11",
     "utctime_updated": "2022-01-07T21:14:11.000000Z",
     "package_name": "phantom_bitglass",
@@ -948,7 +948,7 @@
             },
             {
                 "module": "urllib3",
-                "input_file": "wheels/shared/urllib3-1.26.8-py2.py3-none-any.whl"
+                "input_file": "wheels/shared/urllib3-1.26.9-py2.py3-none-any.whl"
             },
             {
                 "module": "zipp",
@@ -1012,7 +1012,7 @@
             },
             {
                 "module": "urllib3",
-                "input_file": "wheels/shared/urllib3-1.26.8-py2.py3-none-any.whl"
+                "input_file": "wheels/shared/urllib3-1.26.9-py2.py3-none-any.whl"
             }
         ]
     }

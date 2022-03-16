@@ -1,6 +1,16 @@
 # File: app/config.py
 #
-# Licensed under Apache 2.0 (https://www.apache.org/licenses/LICENSE-2.0.txt)
+# Licensed under the Apache License, Version 2.0 (the "License");
+# you may not use this file except in compliance with the License.
+# You may obtain a copy of the License at
+#
+#     http://www.apache.org/licenses/LICENSE-2.0
+#
+# Unless required by applicable law or agreed to in writing, software distributed under
+# the License is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND,
+# either express or implied. See the License for the specific language governing permissions
+# and limitations under the License.
+#
 
 """
 (C) Copyright Bitglass Inc. 2021. All Rights Reserved.
@@ -232,7 +242,7 @@ class Config(object):
         try:
             from app.env import datapath
             self._folder = datapath
-        except Exception as ex:
+        except Exception:
             self._folder = '/store/'
 
         if fname is None:
@@ -329,9 +339,9 @@ class Config(object):
             # IP address exclusion
             # private & local networks
             # FIXED: Commented out to allow private and local
-                # r'(?!(?:10|127)(?:\.\d{1,3}){3})'
-                # r'(?!(?:169\.254|192\.168)(?:\.\d{1,3}){2})'
-                # r'(?!172\.(?:1[6-9]|2\d|3[0-1])(?:\.\d{1,3}){2})'
+            # r'(?!(?:10|127)(?:\.\d{1,3}){3})'
+            # r'(?!(?:169\.254|192\.168)(?:\.\d{1,3}){2})'
+            # r'(?!172\.(?:1[6-9]|2\d|3[0-1])(?:\.\d{1,3}){2})'
             # IP address dotted notation octets
             # excludes loopback network 0.0.0.0
             # excludes reserved space >= 224.0.0.0
