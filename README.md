@@ -2,17 +2,28 @@
 # Bitglass
 
 Publisher: Bitglass Inc\.  
-Connector Version: 1\.0\.10  
+Connector Version: 1\.0\.11  
 Product Vendor: Bitglass Inc\.  
 Product Name: Bitglass Phantom App  
 Product Version Supported (regex): "\.\*"  
-Minimum Product Version: 4\.10\.0\.40961  
+Minimum Product Version: 5\.1\.0  
 
 The app pulls Bitglass cloudaudit and access log data once configured and parses the specified DLP patterns from the asset configuration page
 
-[comment]: # " File: readme.md"
+[comment]: # " File: README.md"
 [comment]: # ""
-[comment]: # "    Licensed under Apache 2.0 (https://www.apache.org/licenses/LICENSE-2.0.txt)"
+[comment]: # "  Copyright (c) 2021-2022 Bitglass App Inc."
+[comment]: # ""
+[comment]: # "  Licensed under the Apache License, Version 2.0 (the 'License');"
+[comment]: # "  you may not use this file except in compliance with the License."
+[comment]: # "  You may obtain a copy of the License at"
+[comment]: # ""
+[comment]: # "      http://www.apache.org/licenses/LICENSE-2.0"
+[comment]: # ""
+[comment]: # "  Unless required by applicable law or agreed to in writing, software distributed under"
+[comment]: # "  the License is distributed on an 'AS IS' BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND,"
+[comment]: # "  either express or implied. See the License for the specific language governing permissions"
+[comment]: # "  and limitations under the License."
 [comment]: # ""
 The app pulls cloudaudit and access Bitglass log data filtered down to the specified DLP patterns.
 It also provides actions for access to Bitglass REST APIs for group and user manipulation. A sample
