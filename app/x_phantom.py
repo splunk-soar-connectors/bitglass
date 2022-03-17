@@ -388,7 +388,7 @@ class BitglassConnector(BaseConnector):
         url = '{0}rest/artifact/{1}/'.format(self.get_phantom_base_url(), id)
 
         try:
-            r = requests.get(url, verify=conf.verify_local)
+            r = requests.get(url, verify=conf.verify_local)  # nosemgrep: python.requests.best-practice.use-timeout.use-timeout
             cef = r.json()['cef']
         except Exception as ex:
             self.debug_print("Unable to query Bitglass artifact: ", str(ex))
@@ -657,6 +657,7 @@ class BitglassConnector(BaseConnector):
 
 def main():
     import argparse
+    import sys
 
     # import pudb
     # pudb.set_trace()
@@ -687,7 +688,7 @@ def main():
             print("Accessing the Login page")
             # TODO Switched to verify=True for the sake of the security scan, no config yet parsed by now..
             #      Add command option?
-            r = requests.get(login_url, verify=True)
+            r = requests.get(login_url, verify=True)  # nosemgrep: python.requests.best-practice.use-timeout.use-timeout
             csrftoken = r.cookies['csrftoken']
 
             data = dict()
@@ -702,11 +703,11 @@ def main():
             print("Logging into Platform to get the session id")
             # TODO Switched to verify=True for the sake of the security scan, no config yet parsed by now..
             #      Add command option?
-            r2 = requests.post(login_url, verify=True, data=data, headers=headers)
+            r2 = requests.post(login_url, verify=True, data=data, headers=headers)  # nosemgrep
             session_id = r2.cookies['sessionid']
         except Exception as e:
             print("Unable to get session id from the platform. Error: " + str(e))
-            exit(1)
+            sys.exit(1)
 
     with open(args.input_test_json) as f:
         in_json = f.read()
@@ -730,7 +731,7 @@ def main():
         if not underphantom:
             connector._runAllActions()
 
-    exit(0)
+    sys.exit(0)
 
 
 if __name__ == '__main__':
