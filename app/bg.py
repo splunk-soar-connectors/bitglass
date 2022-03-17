@@ -389,31 +389,31 @@ def getAPIToken(logData, conf, logType):
         token = logData['nextpagetoken']
         d = json.loads(base64.b64decode(token))
     except Exception as ex:
-        logger.warning('Invalid token returned: %s %s' % (token, ex))
+        logger.warning('Invalid token returned: %s %s' % (token, ex))  # nosemgrep
         return None
 
     # TODO Swap the condition for compatibility if the new logtypes introduced use the same fields as in swqweb*
     if logType != u'swgweb' and logType != u'swgwebdlp':
         # Older log types
         if 'log_id' not in d:
-            logger.warning('No "log_id" encoded in returned token: %s' % token)
+            logger.warning('No "log_id" encoded in returned token: %s' % token)  # nosemgrep
             return None
 
         if 'datetime' not in d:
-            logger.warning('No "datetime" encoded in returned token: %s' % token)
+            logger.warning('No "datetime" encoded in returned token: %s' % token)  # nosemgrep
             return None
     else:
         # Newer log types
         if 'start_time' not in d:
-            logger.warning('No "start_time" encoded in returned token: %s' % token)
+            logger.warning('No "start_time" encoded in returned token: %s' % token)  # nosemgrep
             return None
 
         if 'end_time' not in d:
-            logger.warning('No "end_time" encoded in returned token: %s' % token)
+            logger.warning('No "end_time" encoded in returned token: %s' % token)  # nosemgrep
             return None
 
         if 'page' not in d:
-            logger.warning('No "page" encoded in returned token: %s' % token)
+            logger.warning('No "page" encoded in returned token: %s' % token)  # nosemgrep
             return None
 
     return token
