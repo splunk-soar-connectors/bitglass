@@ -1,6 +1,16 @@
 # File: app/secret.py
 #
-# Licensed under Apache 2.0 (https://www.apache.org/licenses/LICENSE-2.0.txt)
+# Licensed under the Apache License, Version 2.0 (the "License");
+# you may not use this file except in compliance with the License.
+# You may obtain a copy of the License at
+#
+#     http://www.apache.org/licenses/LICENSE-2.0
+#
+# Unless required by applicable law or agreed to in writing, software distributed under
+# the License is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND,
+# either express or implied. See the License for the specific language governing permissions
+# and limitations under the License.
+#
 
 class Secret(object):
     """ For the sake of 'extra' security echo a dummy string back from the server.
@@ -49,7 +59,7 @@ class Password(object):
         try:
             from qpylib.encdec import Encryption
             self.pswd = Encryption({'name': self.name, 'user': self.simpleHash(self.user)}).decrypt()
-        except Exception as ex:
+        except Exception:
             pass
 
     def save(self):
@@ -58,5 +68,5 @@ class Password(object):
         try:
             from qpylib.encdec import Encryption
             Encryption({'name': self.name, 'user': self.simpleHash(self.user)}).encrypt(self.pswd)
-        except Exception as ex:
+        except Exception:
             pass

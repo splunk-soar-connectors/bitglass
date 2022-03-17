@@ -1,6 +1,16 @@
 # File: app/configForward.py
 #
-# Licensed under Apache 2.0 (https://www.apache.org/licenses/LICENSE-2.0.txt)
+# Licensed under the Apache License, Version 2.0 (the "License");
+# you may not use this file except in compliance with the License.
+# You may obtain a copy of the License at
+#
+#     http://www.apache.org/licenses/LICENSE-2.0
+#
+# Unless required by applicable law or agreed to in writing, software distributed under
+# the License is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND,
+# either express or implied. See the License for the specific language governing permissions
+# and limitations under the License.
+#
 
 """
 (C) Copyright Bitglass Inc. 2021. All Rights Reserved.
@@ -11,12 +21,12 @@ import re
 
 from six import PY2
 
-from app.config import Config, Feature, Status, log
+from app.config import Config, Feature, Status, log  # noqa: F401
 from app.secret import Password
 
 try:
     from flask import session
-except Exception as ex:
+except Exception:
     session = {}
 
 # NOTE Do not import from package app/
@@ -73,7 +83,8 @@ class ConfigForward(Config):
     # not used, no buffering
     # p.add_option(
     #     "-e",
-    #     "--eps", dest="eps", type='int', default=500, help='events per second, if set to a value larger then 0 throttling will be applied, defaults to 500')
+    #     "--eps", dest="eps", type='int', default=500,
+    #     help='events per second, if set to a value larger then 0 throttling will be applied, defaults to 500')
 
     # Command line flags to override properties
     Config._flags.update(dict(
@@ -108,7 +119,7 @@ class ConfigForward(Config):
             self.status[log_type] = Status()
 
         # Can't keep it here b/c of deepcopying
-        #self._condition = condition
+        # self._condition = condition
 
         # Load some (useful) hard-coded defaults
         source = 0
@@ -223,7 +234,7 @@ class ConfigForward(Config):
                 proxies.append(proxy)
             except BaseException as ex:
                 raise ex
-            except Exception as ex:
+            except Exception:
                 raise BaseException('Bad proxy expression')
         return proxies
 
@@ -234,7 +245,7 @@ class ConfigForward(Config):
         pxd = self._parseProxies(s)
         for p in pxd:
             k = '%s' % p['schema']
-            v = '%s://%s:%s@%s:%s' % (p['schema_p'], p['user'], p['pswd'], p['host'], p['port'])
+            v = '%s://%s:%s@%s:%s' % (p['schema_p'], p['user'], p['pswd'], p['host'], p['port'])  # pragma: allowlist secret
             if v[-1] == ':':
                 # Empty port
                 v = v[0:-1]
@@ -282,21 +293,21 @@ class ConfigForward(Config):
 
         # Assume update is needed if first time
         isChanged = True
-        if (self.updateCount > 0
+        if (self.updateCount > 0  # noqa: W503
                 # Don't care b/c not saved anyways
                 # and self._auth_type == True if auth_type == 'on' or auth_type == 'True' else False
                 # and self._use_proxy == True if use_proxy == 'on' or use_proxy == 'True' else False
                 #
                 # Not saved but need to check authentication to update status
-                and self._auth_token.secret == auth_token
-                and self._username == username
-                and self._password.secret == password
+                and self._auth_token.secret == auth_token  # noqa: W503
+                and self._username == username  # noqa: W503
+                and self._password.secret == password  # noqa: W503
                 #
-                and self.log_types == logTypes
-                and self.log_interval == log_interval
-                and self.api_url == api_url
-                and self.proxies == proxies
-                and self.sink_url == sink_url):
+                and self.log_types == logTypes  # noqa: W503
+                and self.log_interval == log_interval  # noqa: W503
+                and self.api_url == api_url  # noqa: W503
+                and self.proxies == proxies  # noqa: W503
+                and self.sink_url == sink_url):  # noqa: W503
             # return False
             isChanged = False
 
@@ -366,9 +377,9 @@ class ConfigForward(Config):
             self.api_ver = self._api_version_max
 
         addr_host, addr_port = self.sink_url.split(':')
-        if ('_qradarConsoleAddress' in self.__dict__ and
-                (addr_host == 'localhost' or
-                    addr_host == '127.0.0.1' or
+        if ('_qradarConsoleAddress' in self.__dict__ and  # noqa: W504
+                (addr_host == 'localhost' or  # noqa: W504
+                    addr_host == '127.0.0.1' or  # noqa: W504
                     # Workaround for a false security scan medium error
                     # addr_host == '0.0.0.0')):
                     ('.0.0.' in addr_host and addr_host[0] == '0' and addr_host[-1] == '0' and len(addr_host) == 7))):

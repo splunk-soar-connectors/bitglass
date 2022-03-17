@@ -1,17 +1,26 @@
 # File: app/logevent.py
 #
-# Licensed under Apache 2.0 (https://www.apache.org/licenses/LICENSE-2.0.txt)
+# Licensed under the Apache License, Version 2.0 (the "License");
+# you may not use this file except in compliance with the License.
+# You may obtain a copy of the License at
+#
+#     http://www.apache.org/licenses/LICENSE-2.0
+#
+# Unless required by applicable law or agreed to in writing, software distributed under
+# the License is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND,
+# either express or implied. See the License for the specific language governing permissions
+# and limitations under the License.
+#
 
 """
 (C) Copyright Bitglass Inc. 2021. All Rights Reserved.
 Author: eng@bitglass.com
 """
 
-import sys
+import json
 import logging
 import logging.handlers
-import json
-
+import sys
 from datetime import datetime
 
 # Priority <xy> is already prepended by logging.handlers.emit()
@@ -66,7 +75,7 @@ def main():
     '"ipaddress": "v.x.y.z", "url": "/accounts/server_logout/", "request": "", "activity": "Logout", "emailsenttime": "",'
     '"useragent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_3) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/80.0.3987.122 Safari/537.36",'
     '"emailto": ""}'
-    print (testPayload)
+    print(testPayload)
 
     pushLog(testPayload, (host, 514))
     pushLog(testPayload, (host, 514))

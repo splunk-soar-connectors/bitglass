@@ -1,6 +1,18 @@
 # File: bitglass_connector.py
 #
-# Licensed under Apache 2.0 (https://www.apache.org/licenses/LICENSE-2.0.txt)
+# Copyright (c) 2021-2022 Bitglass App Inc.
+#
+# Licensed under the Apache License, Version 2.0 (the "License");
+# you may not use this file except in compliance with the License.
+# You may obtain a copy of the License at
+#
+#     http://www.apache.org/licenses/LICENSE-2.0
+#
+# Unless required by applicable law or agreed to in writing, software distributed under
+# the License is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND,
+# either express or implied. See the License for the specific language governing permissions
+# and limitations under the License.
+#
 
 # Python 3 Compatibility imports
 from __future__ import print_function, unicode_literals
@@ -8,25 +20,23 @@ from __future__ import print_function, unicode_literals
 # Phantom App imports
 try:
     import phantom.app as phantom
-    from phantom.base_connector import BaseConnector
     from phantom.action_result import ActionResult
+    from phantom.base_connector import BaseConnector
     underphantom = True
 except ImportError:
     underphantom = False
     from test.actions import phantom, BaseConnector, ActionResult
 
-
-import os
-import requests
 import json
-from datetime import datetime
+import os
 import re
+from datetime import datetime
+
+import requests
 from bs4 import BeautifulSoup
 
 from app.bg import bitglassapi as bgapi
-
 from bitglass_consts import *
-
 
 conf = None
 
