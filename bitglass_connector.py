@@ -415,7 +415,7 @@ class BitglassConnector(BaseConnector):
         url = '{0}rest/artifact/{1}/'.format(self.get_phantom_base_url(), id)
 
         try:
-            r = requests.get(url, verify=conf.verify_local)
+            r = requests.get(url, verify=conf.verify_local)  # nosemgrep
             cef = r.json()['cef']
         except Exception as ex:
             err_msg = self._get_error_message_from_exception(ex)
