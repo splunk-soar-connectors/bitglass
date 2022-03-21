@@ -1,6 +1,16 @@
 # File: app/x_phantom.py
 #
-# Licensed under Apache 2.0 (https://www.apache.org/licenses/LICENSE-2.0.txt)
+# Licensed under the Apache License, Version 2.0 (the "License");
+# you may not use this file except in compliance with the License.
+# You may obtain a copy of the License at
+#
+#     http://www.apache.org/licenses/LICENSE-2.0
+#
+# Unless required by applicable law or agreed to in writing, software distributed under
+# the License is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND,
+# either express or implied. See the License for the specific language governing permissions
+# and limitations under the License.
+#
 
 # Python 3 Compatibility imports
 from __future__ import print_function, unicode_literals
@@ -8,24 +18,22 @@ from __future__ import print_function, unicode_literals
 # Phantom App imports
 try:
     import phantom.app as phantom
-    from phantom.base_connector import BaseConnector
     from phantom.action_result import ActionResult
+    from phantom.base_connector import BaseConnector
     underphantom = True
 except ImportError:
     underphantom = False
     from test.actions import phantom, BaseConnector, ActionResult
 
-
-import os
-import requests
 import json
-from datetime import datetime
+import os
 import re
+from datetime import datetime
+
+import requests
 from bs4 import BeautifulSoup
 
-
 from app.bg import bitglassapi as bgapi
-
 
 # TODO ?? Usage of the consts file is recommended
 # from bitglass_consts import *
@@ -380,7 +388,7 @@ class BitglassConnector(BaseConnector):
         url = '{0}rest/artifact/{1}/'.format(self.get_phantom_base_url(), id)
 
         try:
-            r = requests.get(url, verify=conf.verify_local)
+            r = requests.get(url, verify=conf.verify_local)  # nosemgrep: python.requests.best-practice.use-timeout.use-timeout
             cef = r.json()['cef']
         except Exception as ex:
             self.debug_print("Unable to query Bitglass artifact: ", str(ex))
@@ -649,6 +657,7 @@ class BitglassConnector(BaseConnector):
 
 def main():
     import argparse
+    import sys
 
     # import pudb
     # pudb.set_trace()
@@ -679,7 +688,7 @@ def main():
             print("Accessing the Login page")
             # TODO Switched to verify=True for the sake of the security scan, no config yet parsed by now..
             #      Add command option?
-            r = requests.get(login_url, verify=True)
+            r = requests.get(login_url, verify=True)  # nosemgrep: python.requests.best-practice.use-timeout.use-timeout
             csrftoken = r.cookies['csrftoken']
 
             data = dict()
@@ -694,11 +703,11 @@ def main():
             print("Logging into Platform to get the session id")
             # TODO Switched to verify=True for the sake of the security scan, no config yet parsed by now..
             #      Add command option?
-            r2 = requests.post(login_url, verify=True, data=data, headers=headers)
+            r2 = requests.post(login_url, verify=True, data=data, headers=headers)  # nosemgrep
             session_id = r2.cookies['sessionid']
         except Exception as e:
             print("Unable to get session id from the platform. Error: " + str(e))
-            exit(1)
+            sys.exit(1)
 
     with open(args.input_test_json) as f:
         in_json = f.read()
@@ -722,7 +731,7 @@ def main():
         if not underphantom:
             connector._runAllActions()
 
-    exit(0)
+    sys.exit(0)
 
 
 if __name__ == '__main__':

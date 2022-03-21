@@ -1,0 +1,26 @@
+Splunk SOAR Bitglass
+Copyright (c) 2021-2022 Bitglass App Inc.
+
+Third-party Software Attributions:
+
+Library: Flask
+Version: 2.0.2
+License: BSD 3
+Copyright 2010 Pallets
+
+Library: beautifulsoup4
+Version: 4.10.0
+License: MIT
+Copyright 2004-2017 Leonard Richardson
+Copyright 2004-2019 Leonard Richardson
+Copyright 2018 Isaac Muse
+
+Library: requests
+Version: 2.25.1
+License: Apache 2.0
+Kenneth Reitz
+
+Library: six
+Version: 1.15.0
+License: MIT
+Copyright 2010-2020 Benjamin Peterson
