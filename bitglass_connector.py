@@ -1,18 +1,7 @@
 # File: bitglass_connector.py
 #
-# Copyright (c) 2021-2022 Bitglass App Inc.
-#
-# Licensed under the Apache License, Version 2.0 (the "License");
-# you may not use this file except in compliance with the License.
-# You may obtain a copy of the License at
-#
-#     http://www.apache.org/licenses/LICENSE-2.0
-#
-# Unless required by applicable law or agreed to in writing, software distributed under
-# the License is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND,
-# either express or implied. See the License for the specific language governing permissions
-# and limitations under the License.
-#
+# Author: alexeiyur AT g m 4 i l . c 0 m
+# Licensed under the MIT License (https://mit-license.org/)
 
 # Python 3 Compatibility imports
 from __future__ import print_function, unicode_literals
@@ -27,16 +16,34 @@ except ImportError:
     underphantom = False
     from test.actions import phantom, BaseConnector, ActionResult
 
+
 import json
 import os
 import re
 from datetime import datetime
-
 import requests
 from bs4 import BeautifulSoup
 
 from app.bg import bitglassapi as bgapi
-from bitglass_consts import *
+
+from app.consts import GC_DATE_FORMAT, \
+                        GC_ALERT_USER_MATCH_KEY, \
+                        GC_BG_USERNAME_CONTAINS, \
+                        ERR_CODE_MSG, \
+                        ERR_MSG_UNAVAILABLE, \
+                        PARSE_ERR_MSG, \
+                        INVALID_PARAMS_ERR_MSG, \
+                        INVALID_PARAM_ERR_MSG, \
+                        GC_FIELD_LOGTYPE, \
+                        GC_LOGTYPE_CLOUDSUMMARY, \
+                        GC_LOGTYPE_ACCESS, \
+                        GC_LOGTYPE_CLOUDAUDIT, \
+                        GC_FIELD_DLPPATTERN, \
+                        GC_FIELD_EMAIL, \
+                        GC_FIELD_PATTERNS, \
+                        GC_FIELD_OWNER, \
+                        GC_FIELD_TIME
+
 
 conf = None
 
@@ -118,7 +125,7 @@ class BitglassConnector(BaseConnector):
             else:
                 error_code = ERR_CODE_MSG
                 error_msg = ERR_MSG_UNAVAILABLE
-        except:
+        except Exception:
             error_code = ERR_CODE_MSG
             error_msg = ERR_MSG_UNAVAILABLE
 
@@ -128,7 +135,7 @@ class BitglassConnector(BaseConnector):
             else:
                 error_text = "Error Code: {0}. Error Message: {1}".format(
                     error_code, error_msg)
-        except:
+        except Exception:
             self.debug_print("Error occurred while parsing the error message")
             error_text = PARSE_ERR_MSG
 
@@ -267,7 +274,7 @@ class BitglassConnector(BaseConnector):
         if phantom.is_fail(ret_val):
             # Multiple rest requests below, each one containing multiple log events
             try:
-                status = bgapi(self).PollLogs(conf, [u'cloudsummary'])
+                status = bgapi(self).PollLogs(conf, [GC_LOGTYPE_CLOUDSUMMARY])
                 ret_val, _ = RetVal(
                     action_result.set_status(
                         phantom.APP_SUCCESS if status['last'].ok() else phantom.APP_ERROR),
@@ -287,27 +294,27 @@ class BitglassConnector(BaseConnector):
     def bgPushLogEvent(self, d, address, logTime):
         user = None
         try:
-            if d[u'logtype'] == 'access':
+            if d[GC_FIELD_LOGTYPE] == GC_LOGTYPE_ACCESS:
                 # TODO ?? Why ALL-PCI not matching with 'PCI.*' (without ^)?
-                if re.fullmatch(conf.filter_access, d[u'dlppattern']):
-                    self.debug_print('access matched', d[u'dlppattern'])
-                    user = d[u'email']
-                    pattern = d[u'dlppattern']
+                if re.fullmatch(conf.filter_access, d[GC_FIELD_DLPPATTERN]):
+                    self.debug_print('access matched', d[GC_FIELD_DLPPATTERN])
+                    user = d[GC_FIELD_EMAIL]
+                    pattern = d[GC_FIELD_DLPPATTERN]
                     field = 'email'
-            elif d[u'logtype'] == 'cloudaudit':
-                if re.fullmatch(conf.filter_cloudaudit, d[u'patterns']):
-                    self.debug_print('cloudaudit matched', d[u'patterns'])
-                    user = d[u'owner']
-                    pattern = d[u'patterns']
+            elif d[GC_FIELD_LOGTYPE] == GC_LOGTYPE_CLOUDAUDIT:
+                if re.fullmatch(conf.filter_cloudaudit, d[GC_FIELD_PATTERNS]):
+                    self.debug_print('cloudaudit matched', d[GC_FIELD_PATTERNS])
+                    user = d[GC_FIELD_OWNER]
+                    pattern = d[GC_FIELD_PATTERNS]
                     field = 'owner'
         except Exception:
-            pass
+            return
 
         if user:
             # Add all matches properly, not just first matches for the user
             if user not in self.newUsers:
                 self.newUsers.append(user)
-            self.newMatches.append(PatternMatch(user, pattern, d[u'time'], d, field))
+            self.newMatches.append(PatternMatch(user, pattern, d[GC_FIELD_TIME], d, field))
 
     def bgFlushLogEvents(self):
         # A new container is created in _save_new_container
@@ -331,7 +338,7 @@ class BitglassConnector(BaseConnector):
                     # 'dataPatterns': GC_BG_PATTERN_CONTAINS,
                 },
 
-                    } for u in artifacts]
+            } for u in artifacts]
         }
 
         # Don't add empty containers
@@ -415,7 +422,7 @@ class BitglassConnector(BaseConnector):
         url = '{0}rest/artifact/{1}/'.format(self.get_phantom_base_url(), id)
 
         try:
-            r = requests.get(url, verify=conf.verify_local)  # nosemgrep
+            r = requests.get(url, verify=conf.verify_local)     # nosemgrep: python.requests.best-practice.use-timeout.use-timeout
             cef = r.json()['cef']
         except Exception as ex:
             err_msg = self._get_error_message_from_exception(ex)
@@ -499,8 +506,8 @@ class BitglassConnector(BaseConnector):
                 params = json.loads(''.join([
                     '{',
                     '"groupname": "{0}", "companyemail": [{1}]'.format(groupName,
-                                                                    ','.join(['"' + u + '"'
-                                                                            for u in self.newUsers])),
+                                                                       ','.join(['"' + u + '"'
+                                                                                for u in self.newUsers])),
                     '}',
                 ]))
         except Exception:
@@ -525,7 +532,7 @@ class BitglassConnector(BaseConnector):
                 params = json.loads(''.join([
                     '{',
                     '"groupname": "{0}", "companyemail": [{1}]'.format(groupName,
-                                                                    ','.join(['"' + u + '"'
+                                                                       ','.join(['"' + u + '"'
                                                                                 for u in [userName]])),
                     '}',
                 ]))
@@ -662,11 +669,12 @@ class BitglassConnector(BaseConnector):
         conf.verify_local = conf.verify
 
         # TODO Don't know how to custom validate asset fields so have to do it here
-        try:
-            conf.proxies = conf._getProxies(config.get('proxies', ''))
-        except BaseException as ex:
-            err_msg = self._get_error_message_from_exception(ex)
-            self.debug_print('Bad proxy param while getting configuration params {}'.format(err_msg))
+        if config.get('proxies', ''):
+            try:
+                conf.proxies = conf._getProxies(config.get('proxies', ''))
+            except BaseException as ex:
+                err_msg = self._get_error_message_from_exception(ex)
+                self.debug_print('Bad proxy param while getting configuration params {}'.format(err_msg))
 
         # These 2 are extra
         conf.filter_access = config.get('filter_access', '')
@@ -676,9 +684,9 @@ class BitglassConnector(BaseConnector):
         # (the latter is to avoid accidental flooding with unnecessary high frequency data)
         conf.log_types = []
         if config['enable_access'] and conf.filter_access != '':
-            conf.log_types += [u'access']
+            conf.log_types += [GC_LOGTYPE_ACCESS]
         if config['enable_cloudaudit'] and conf.filter_cloudaudit != '':
-            conf.log_types += [u'cloudaudit']
+            conf.log_types += [GC_LOGTYPE_CLOUDAUDIT]
 
         # Secret parameters are not loaded in either mode
         conf._auth_token.pswd = config['auth_token']
@@ -743,14 +751,16 @@ def main():
             r = requests.get(login_url, verify=True, timeout=60)
             csrftoken = r.cookies['csrftoken']
 
-            data = dict()
-            data['username'] = username
-            data['password'] = password
-            data['csrfmiddlewaretoken'] = csrftoken
+            data = {
+                'username': username,
+                'password': password,
+                'csrfmiddlewaretoken': csrftoken
+            }
 
-            headers = dict()
-            headers['Cookie'] = 'csrftoken=' + csrftoken
-            headers['Referer'] = login_url
+            headers = {
+                'Cookie': 'csrftoken=' + csrftoken,
+                'Referer': login_url
+            }
 
             print("Logging into Platform to get the session id")
             # TODO Switched to verify=True for the sake of the security scan, no config yet parsed by now..

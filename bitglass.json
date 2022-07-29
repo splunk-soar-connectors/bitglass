@@ -10,8 +10,8 @@
     "python_version": "3",
     "product_version_regex": ".*",
     "publisher": "Bitglass Inc.",
-    "license": "Copyright (c) 2021-2022 Bitglass App Inc.",
-    "app_version": "1.0.11",
+    "license": "Copyright (c) 2022 alexeiyur",
+    "app_version": "1.0.14",
     "utctime_updated": "2022-01-07T21:14:11.000000Z",
     "package_name": "phantom_bitglass",
     "main_module": "bitglass_connector.py",
@@ -935,10 +935,6 @@
                 "input_file": "wheels/shared/requests-2.25.1-py2.py3-none-any.whl"
             },
             {
-                "module": "six",
-                "input_file": "wheels/shared/six-1.15.0-py2.py3-none-any.whl"
-            },
-            {
                 "module": "soupsieve",
                 "input_file": "wheels/py3/soupsieve-2.3.1-py3-none-any.whl"
             },
@@ -1001,10 +997,6 @@
             {
                 "module": "requests",
                 "input_file": "wheels/shared/requests-2.25.1-py2.py3-none-any.whl"
-            },
-            {
-                "module": "six",
-                "input_file": "wheels/shared/six-1.15.0-py2.py3-none-any.whl"
             },
             {
                 "module": "soupsieve",
