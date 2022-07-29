@@ -1,29 +1,20 @@
 [comment]: # "Auto-generated SOAR connector documentation"
 # Bitglass
 
-Publisher: Bitglass Inc\.  
-Connector Version: 1\.0\.11  
-Product Vendor: Bitglass Inc\.  
-Product Name: Bitglass Phantom App  
-Product Version Supported (regex): "\.\*"  
-Minimum Product Version: 5\.1\.0  
+Publisher: Bitglass Inc\.
+Connector Version: 1\.0\.14
+Product Vendor: Bitglass Inc\.
+Product Name: Bitglass Phantom App
+Product Version Supported (regex): "\.\*"
+Minimum Product Version: 5\.1\.0
 
 The app pulls Bitglass cloudaudit and access log data once configured and parses the specified DLP patterns from the asset configuration page
 
 [comment]: # " File: README.md"
 [comment]: # ""
-[comment]: # "  Copyright (c) 2021-2022 Bitglass App Inc."
+[comment]: # "  Copyright (c) 2022 alexeiyur"
 [comment]: # ""
-[comment]: # "  Licensed under the Apache License, Version 2.0 (the 'License');"
-[comment]: # "  you may not use this file except in compliance with the License."
-[comment]: # "  You may obtain a copy of the License at"
-[comment]: # ""
-[comment]: # "      http://www.apache.org/licenses/LICENSE-2.0"
-[comment]: # ""
-[comment]: # "  Unless required by applicable law or agreed to in writing, software distributed under"
-[comment]: # "  the License is distributed on an 'AS IS' BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND,"
-[comment]: # "  either express or implied. See the License for the specific language governing permissions"
-[comment]: # "  and limitations under the License."
+[comment]: # "  Licensed under the MIT License (https://mit-license.org/)"
 [comment]: # ""
 The app pulls cloudaudit and access Bitglass log data filtered down to the specified DLP patterns.
 It also provides actions for access to Bitglass REST APIs for group and user manipulation. A sample
@@ -33,7 +24,7 @@ playbook is included.
 
 -   After installing the app, please perform the following configuration steps:
 
-      
+
 
     -   Create a new asset and save the required settings 'OAuth 2 Authentication Token' and
         'Bitglass API URL' in the 'Asset Settings' tab
@@ -152,34 +143,34 @@ VARIABLE | REQUIRED | TYPE | DESCRIPTION
 **enable\_cloudaudit** |  optional  | boolean | Pull Bitglass CloudAudit logs \:
 **filter\_cloudaudit** |  optional  | string | DLP Pattern for CloudAudit
 
-### Supported Actions  
-[test connectivity](#action-test-connectivity) - Validate the asset configuration for connectivity using supplied configuration  
-[on poll](#action-on-poll) - Polls for new pattern\-matched Bitglass events used for other actions to act upon  
-[filter by dlp pattern](#action-filter-by-dlp-pattern) - Filter log artifacts by DLP pattern  
-[create update group](#action-create-update-group) - Create or update a group  
-[delete group](#action-delete-group) - Delete a group  
-[add user to group](#action-add-user-to-group) - Add risky user to a group  
-[remove user from group](#action-remove-user-from-group) - Remove risky user from a group  
-[create update user](#action-create-update-user) - Create or update user  
-[deactivate user](#action-deactivate-user) - Deactivate user  
-[reactivate user](#action-reactivate-user) - Reactivate user  
+### Supported Actions
+[test connectivity](#action-test-connectivity) - Validate the asset configuration for connectivity using supplied configuration
+[on poll](#action-on-poll) - Polls for new pattern\-matched Bitglass events used for other actions to act upon
+[filter by dlp pattern](#action-filter-by-dlp-pattern) - Filter log artifacts by DLP pattern
+[create update group](#action-create-update-group) - Create or update a group
+[delete group](#action-delete-group) - Delete a group
+[add user to group](#action-add-user-to-group) - Add risky user to a group
+[remove user from group](#action-remove-user-from-group) - Remove risky user from a group
+[create update user](#action-create-update-user) - Create or update user
+[deactivate user](#action-deactivate-user) - Deactivate user
+[reactivate user](#action-reactivate-user) - Reactivate user
 
 ## action: 'test connectivity'
 Validate the asset configuration for connectivity using supplied configuration
 
-Type: **test**  
+Type: **test**
 Read only: **True**
 
 #### Action Parameters
 No parameters are required for this action
 
 #### Action Output
-No Output  
+No Output
 
 ## action: 'on poll'
 Polls for new pattern\-matched Bitglass events used for other actions to act upon
 
-Type: **ingest**  
+Type: **ingest**
 Read only: **True**
 
 Use this action to poll for and ingest new pattern\-matched Bitglass log events\. These events will be used as input for other playbook actions\.
@@ -188,12 +179,12 @@ Use this action to poll for and ingest new pattern\-matched Bitglass log events\
 No parameters are required for this action
 
 #### Action Output
-No Output  
+No Output
 
 ## action: 'filter by dlp pattern'
 Filter log artifacts by DLP pattern
 
-Type: **investigate**  
+Type: **investigate**
 Read only: **True**
 
 Use this action to filter log artifacts by DLP patterns with a Python regex\.
@@ -201,25 +192,25 @@ Use this action to filter log artifacts by DLP patterns with a Python regex\.
 #### Action Parameters
 PARAMETER | REQUIRED | DESCRIPTION | TYPE | CONTAINS
 --------- | -------- | ----------- | ---- | --------
-**bg\_match\_expression** |  required  | Python regex expression to match the patterns | string | 
-**bg\_log\_event** |  required  | Phantom artifact ID | string |  `phantom artifact id` 
+**bg\_match\_expression** |  required  | Python regex expression to match the patterns | string |
+**bg\_log\_event** |  required  | Phantom artifact ID | string |  `phantom artifact id`
 
 #### Action Output
 DATA PATH | TYPE | CONTAINS
 --------- | ---- | --------
-action\_result\.parameter\.bg\_match\_expression | string | 
-action\_result\.parameter\.bg\_log\_event | string |  `phantom artifact id` 
-action\_result\.data\.\*\.userName | string |  `user name` 
-action\_result\.status | string | 
-action\_result\.message | string | 
-action\_result\.summary | string | 
-summary\.total\_objects | numeric | 
-summary\.total\_objects\_successful | numeric |   
+action\_result\.parameter\.bg\_match\_expression | string |
+action\_result\.parameter\.bg\_log\_event | string |  `phantom artifact id`
+action\_result\.data\.\*\.userName | string |  `user name`
+action\_result\.status | string |
+action\_result\.message | string |
+action\_result\.summary | string |
+summary\.total\_objects | numeric |
+summary\.total\_objects\_successful | numeric |
 
 ## action: 'create update group'
 Create or update a group
 
-Type: **correct**  
+Type: **correct**
 Read only: **False**
 
 Use this action to create or update group for risky users\.
@@ -227,25 +218,25 @@ Use this action to create or update group for risky users\.
 #### Action Parameters
 PARAMETER | REQUIRED | DESCRIPTION | TYPE | CONTAINS
 --------- | -------- | ----------- | ---- | --------
-**bg\_group\_name** |  required  | Name of the group to create or update | string |  `bg group name` 
-**bg\_new\_group\_name** |  optional  | New name of the group to rename to | string | 
+**bg\_group\_name** |  required  | Name of the group to create or update | string |  `bg group name`
+**bg\_new\_group\_name** |  optional  | New name of the group to rename to | string |
 
 #### Action Output
 DATA PATH | TYPE | CONTAINS
 --------- | ---- | --------
-action\_result\.parameter\.bg\_group\_name | string |  `bg group name` 
-action\_result\.parameter\.bg\_new\_group\_name | string | 
-action\_result\.data | string | 
-action\_result\.status | string | 
-action\_result\.message | string | 
-action\_result\.summary | string | 
-summary\.total\_objects | numeric | 
-summary\.total\_objects\_successful | numeric |   
+action\_result\.parameter\.bg\_group\_name | string |  `bg group name`
+action\_result\.parameter\.bg\_new\_group\_name | string |
+action\_result\.data | string |
+action\_result\.status | string |
+action\_result\.message | string |
+action\_result\.summary | string |
+summary\.total\_objects | numeric |
+summary\.total\_objects\_successful | numeric |
 
 ## action: 'delete group'
 Delete a group
 
-Type: **contain**  
+Type: **contain**
 Read only: **False**
 
 Use this action to delete group for risky users\.
@@ -253,23 +244,23 @@ Use this action to delete group for risky users\.
 #### Action Parameters
 PARAMETER | REQUIRED | DESCRIPTION | TYPE | CONTAINS
 --------- | -------- | ----------- | ---- | --------
-**bg\_group\_name** |  required  | Name of the group to delete | string |  `bg group name` 
+**bg\_group\_name** |  required  | Name of the group to delete | string |  `bg group name`
 
 #### Action Output
 DATA PATH | TYPE | CONTAINS
 --------- | ---- | --------
-action\_result\.parameter\.bg\_group\_name | string |  `bg group name` 
-action\_result\.data | string | 
-action\_result\.status | string | 
-action\_result\.message | string | 
-action\_result\.summary | string | 
-summary\.total\_objects | numeric | 
-summary\.total\_objects\_successful | numeric |   
+action\_result\.parameter\.bg\_group\_name | string |  `bg group name`
+action\_result\.data | string |
+action\_result\.status | string |
+action\_result\.message | string |
+action\_result\.summary | string |
+summary\.total\_objects | numeric |
+summary\.total\_objects\_successful | numeric |
 
 ## action: 'add user to group'
 Add risky user to a group
 
-Type: **correct**  
+Type: **correct**
 Read only: **False**
 
 Use this action to add user determined risky to a special group\.
@@ -277,25 +268,25 @@ Use this action to add user determined risky to a special group\.
 #### Action Parameters
 PARAMETER | REQUIRED | DESCRIPTION | TYPE | CONTAINS
 --------- | -------- | ----------- | ---- | --------
-**bg\_group\_name** |  required  | Name of the group to add the risky user to | string |  `bg group name` 
-**bg\_user\_name** |  required  | User name to add | string |  `user name` 
+**bg\_group\_name** |  required  | Name of the group to add the risky user to | string |  `bg group name`
+**bg\_user\_name** |  required  | User name to add | string |  `user name`
 
 #### Action Output
 DATA PATH | TYPE | CONTAINS
 --------- | ---- | --------
-action\_result\.parameter\.bg\_group\_name | string |  `bg group name` 
-action\_result\.parameter\.bg\_user\_name | string |  `user name` 
-action\_result\.data | string | 
-action\_result\.status | string | 
-action\_result\.message | string | 
-action\_result\.summary | string | 
-summary\.total\_objects | numeric | 
-summary\.total\_objects\_successful | numeric |   
+action\_result\.parameter\.bg\_group\_name | string |  `bg group name`
+action\_result\.parameter\.bg\_user\_name | string |  `user name`
+action\_result\.data | string |
+action\_result\.status | string |
+action\_result\.message | string |
+action\_result\.summary | string |
+summary\.total\_objects | numeric |
+summary\.total\_objects\_successful | numeric |
 
 ## action: 'remove user from group'
 Remove risky user from a group
 
-Type: **contain**  
+Type: **contain**
 Read only: **False**
 
 Use this action to remove user previously determined risky from the group\.
@@ -303,25 +294,25 @@ Use this action to remove user previously determined risky from the group\.
 #### Action Parameters
 PARAMETER | REQUIRED | DESCRIPTION | TYPE | CONTAINS
 --------- | -------- | ----------- | ---- | --------
-**bg\_group\_name** |  required  | Name of the group to add the risky user to | string |  `bg group name` 
-**bg\_user\_name** |  required  | User name to remove | string |  `user name` 
+**bg\_group\_name** |  required  | Name of the group to add the risky user to | string |  `bg group name`
+**bg\_user\_name** |  required  | User name to remove | string |  `user name`
 
 #### Action Output
 DATA PATH | TYPE | CONTAINS
 --------- | ---- | --------
-action\_result\.parameter\.bg\_group\_name | string |  `bg group name` 
-action\_result\.parameter\.bg\_user\_name | string |  `user name` 
-action\_result\.data | string | 
-action\_result\.status | string | 
-action\_result\.message | string | 
-action\_result\.summary | string | 
-summary\.total\_objects | numeric | 
-summary\.total\_objects\_successful | numeric |   
+action\_result\.parameter\.bg\_group\_name | string |  `bg group name`
+action\_result\.parameter\.bg\_user\_name | string |  `user name`
+action\_result\.data | string |
+action\_result\.status | string |
+action\_result\.message | string |
+action\_result\.summary | string |
+summary\.total\_objects | numeric |
+summary\.total\_objects\_successful | numeric |
 
 ## action: 'create update user'
 Create or update user
 
-Type: **correct**  
+Type: **correct**
 Read only: **False**
 
 Use this action to create or update user\.
@@ -329,45 +320,45 @@ Use this action to create or update user\.
 #### Action Parameters
 PARAMETER | REQUIRED | DESCRIPTION | TYPE | CONTAINS
 --------- | -------- | ----------- | ---- | --------
-**bg\_user\_name** |  required  | Email of the user to create or update | string |  `user name` 
-**bg\_first\_name** |  optional  | First name | string | 
-**bg\_last\_name** |  optional  | Last name | string | 
-**bg\_secondary\_email** |  optional  | Secondary email | string | 
-**bg\_netbios\_domain** |  optional  | NetBIOS domain | string | 
-**bg\_sam\_account\_name** |  optional  | SAM account domain | string | 
-**bg\_user\_principal\_name** |  optional  | User principal name | string | 
-**bg\_object\_guid** |  optional  | Object GUID | string | 
-**bg\_country\_code** |  optional  | Country code | string | 
-**bg\_mobile\_number** |  optional  | Mobile number | string | 
-**bg\_admin\_role** |  optional  | Admin role | string | 
-**bg\_group\_membership** |  optional  | Place the user under the group | string | 
+**bg\_user\_name** |  required  | Email of the user to create or update | string |  `user name`
+**bg\_first\_name** |  optional  | First name | string |
+**bg\_last\_name** |  optional  | Last name | string |
+**bg\_secondary\_email** |  optional  | Secondary email | string |
+**bg\_netbios\_domain** |  optional  | NetBIOS domain | string |
+**bg\_sam\_account\_name** |  optional  | SAM account domain | string |
+**bg\_user\_principal\_name** |  optional  | User principal name | string |
+**bg\_object\_guid** |  optional  | Object GUID | string |
+**bg\_country\_code** |  optional  | Country code | string |
+**bg\_mobile\_number** |  optional  | Mobile number | string |
+**bg\_admin\_role** |  optional  | Admin role | string |
+**bg\_group\_membership** |  optional  | Place the user under the group | string |
 
 #### Action Output
 DATA PATH | TYPE | CONTAINS
 --------- | ---- | --------
-action\_result\.parameter\.bg\_user\_name | string |  `user name` 
-action\_result\.parameter\.bg\_first\_name | string | 
-action\_result\.parameter\.bg\_last\_name | string | 
-action\_result\.parameter\.bg\_secondary\_email | string | 
-action\_result\.parameter\.bg\_netbios\_domain | string | 
-action\_result\.parameter\.bg\_sam\_account\_name | string | 
-action\_result\.parameter\.bg\_user\_principal\_name | string | 
-action\_result\.parameter\.bg\_object\_guid | string | 
-action\_result\.parameter\.bg\_country\_code | string | 
-action\_result\.parameter\.bg\_mobile\_number | string | 
-action\_result\.parameter\.bg\_admin\_role | string | 
-action\_result\.parameter\.bg\_group\_membership | string | 
-action\_result\.data | string | 
-action\_result\.status | string | 
-action\_result\.message | string | 
-action\_result\.summary | string | 
-summary\.total\_objects | numeric | 
-summary\.total\_objects\_successful | numeric |   
+action\_result\.parameter\.bg\_user\_name | string |  `user name`
+action\_result\.parameter\.bg\_first\_name | string |
+action\_result\.parameter\.bg\_last\_name | string |
+action\_result\.parameter\.bg\_secondary\_email | string |
+action\_result\.parameter\.bg\_netbios\_domain | string |
+action\_result\.parameter\.bg\_sam\_account\_name | string |
+action\_result\.parameter\.bg\_user\_principal\_name | string |
+action\_result\.parameter\.bg\_object\_guid | string |
+action\_result\.parameter\.bg\_country\_code | string |
+action\_result\.parameter\.bg\_mobile\_number | string |
+action\_result\.parameter\.bg\_admin\_role | string |
+action\_result\.parameter\.bg\_group\_membership | string |
+action\_result\.data | string |
+action\_result\.status | string |
+action\_result\.message | string |
+action\_result\.summary | string |
+summary\.total\_objects | numeric |
+summary\.total\_objects\_successful | numeric |
 
 ## action: 'deactivate user'
 Deactivate user
 
-Type: **contain**  
+Type: **contain**
 Read only: **False**
 
 Use this action to deactivate user\.
@@ -375,23 +366,23 @@ Use this action to deactivate user\.
 #### Action Parameters
 PARAMETER | REQUIRED | DESCRIPTION | TYPE | CONTAINS
 --------- | -------- | ----------- | ---- | --------
-**bg\_user\_name** |  required  | Email of the user to deactivate | string |  `user name` 
+**bg\_user\_name** |  required  | Email of the user to deactivate | string |  `user name`
 
 #### Action Output
 DATA PATH | TYPE | CONTAINS
 --------- | ---- | --------
-action\_result\.parameter\.bg\_user\_name | string |  `user name` 
-action\_result\.data | string | 
-action\_result\.status | string | 
-action\_result\.message | string | 
-action\_result\.summary | string | 
-summary\.total\_objects | numeric | 
-summary\.total\_objects\_successful | numeric |   
+action\_result\.parameter\.bg\_user\_name | string |  `user name`
+action\_result\.data | string |
+action\_result\.status | string |
+action\_result\.message | string |
+action\_result\.summary | string |
+summary\.total\_objects | numeric |
+summary\.total\_objects\_successful | numeric |
 
 ## action: 'reactivate user'
 Reactivate user
 
-Type: **correct**  
+Type: **correct**
 Read only: **False**
 
 Use this action to reactivate user\.
@@ -399,15 +390,15 @@ Use this action to reactivate user\.
 #### Action Parameters
 PARAMETER | REQUIRED | DESCRIPTION | TYPE | CONTAINS
 --------- | -------- | ----------- | ---- | --------
-**bg\_user\_name** |  required  | Email of the user to reactivate | string |  `user name` 
+**bg\_user\_name** |  required  | Email of the user to reactivate | string |  `user name`
 
 #### Action Output
 DATA PATH | TYPE | CONTAINS
 --------- | ---- | --------
-action\_result\.parameter\.bg\_user\_name | string |  `user name` 
-action\_result\.data | string | 
-action\_result\.status | string | 
-action\_result\.message | string | 
-action\_result\.summary | string | 
-summary\.total\_objects | numeric | 
-summary\.total\_objects\_successful | numeric | 
+action\_result\.parameter\.bg\_user\_name | string |  `user name`
+action\_result\.data | string |
+action\_result\.status | string |
+action\_result\.message | string |
+action\_result\.summary | string |
+summary\.total\_objects | numeric |
+summary\.total\_objects\_successful | numeric |
