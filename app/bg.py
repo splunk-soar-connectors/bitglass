@@ -374,7 +374,7 @@ def getAPIToken(logData, conf, logType):
             return None
     else:
         if 'start_time' not in d:
-            app.logger.warning('No "start_time" encoded in logtype "%s" returned token: %s' % (logType, token)) # nosemgrep
+            app.logger.warning('No "start_time" encoded in logtype "%s" returned token: %s' % (logType, token))  # nosemgrep
             return None
 
         if 'end_time' not in d:
