@@ -6,9 +6,10 @@
 import json
 import logging
 import logging.handlers
+from datetime import datetime
+
 # import sys
 
-from datetime import datetime
 
 # Priority <xy> is already prepended by logging.handlers.emit()
 SYSLOG_HEADER = '%s bitglass :%s'

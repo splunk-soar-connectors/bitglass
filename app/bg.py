@@ -3,42 +3,30 @@
 # Author: alexeiyur AT g m 4 i l . c 0 m
 # Licensed under the MIT License (https://mit-license.org/)
 
+import base64
+import copy
 import json
 import os
 import socketserver
-import base64
-import copy
 import time
-from threading import Thread, Condition
 from datetime import datetime, timedelta
-# from threading import get_ident
-
+from threading import Condition, Thread
 from urllib.error import HTTPError
-import requests
-from requests.auth import HTTPBasicAuth, AuthBase
 
+import requests
+from requests.auth import AuthBase, HTTPBasicAuth
 
 import app
-
-# This is the inconvenience to keep the static security scanners happy (could have used import * instead)
-from app.consts import GC_LOGTYPE_CLOUDAUDIT, \
-                       GC_LOGTYPE_ACCESS, \
-                       GC_LOGTYPE_ADMIN, \
-                       GC_LOGTYPE_CLOUDSUMMARY, \
-                       GC_LOGTYPE_SWGWEB, \
-                       GC_LOGTYPE_SWGWEBDLP, \
-                       GC_LOGTYPE_HEALTHPROXY, \
-                       GC_LOGTYPE_HEALTHAPI, \
-                       GC_LOGTYPE_HEALTHSYSTEM, \
-                       GC_FIELD_LOGTYPE, \
-                       GC_FIELD_NEXTPAGETOKEN, \
-                       GC_FIELD_INGESTEDTIME, \
-                       GC_FIELD_INITIALTIME
-
-from app.env import UpdateDataPath, datapath, loggingpath
-from app.config import open_atomic, setPythonLoggingLevel, setPythonLogging, versionTuple
+from app.config import open_atomic, setPythonLogging, setPythonLoggingLevel, versionTuple
 from app.configForward import ConfigForward, log_types
+# This is the inconvenience to keep the static security scanners happy (could have used import * instead)
+from app.consts import (GC_FIELD_INGESTEDTIME, GC_FIELD_INITIALTIME, GC_FIELD_LOGTYPE, GC_FIELD_NEXTPAGETOKEN, GC_LOGTYPE_ACCESS,
+                        GC_LOGTYPE_ADMIN, GC_LOGTYPE_CLOUDAUDIT, GC_LOGTYPE_CLOUDSUMMARY, GC_LOGTYPE_HEALTHAPI, GC_LOGTYPE_HEALTHPROXY,
+                        GC_LOGTYPE_HEALTHSYSTEM, GC_LOGTYPE_SWGWEB, GC_LOGTYPE_SWGWEBDLP)
+from app.env import UpdateDataPath, datapath, loggingpath
 from app.logevent import pushLog
+
+# from threading import get_ident
 
 
 conf = None
@@ -858,15 +846,15 @@ class bitglassapi:
     # Default callbacks command mode without explicit context (like Splunk)
     def bgPushLogEvent(self, d, address, logTime):
         # Additional processing for the script
-        from app import cli     # pylint: disable=E0401
+        from app import cli  # pylint: disable=E0401
         cli.pushLog(d, address, logTime)
 
     def bgFlushLogEvents(self):
-        from app import cli     # pylint: disable=E0401
+        from app import cli  # pylint: disable=E0401
         cli.flushLogs()
 
     def bgLoadConfig(self, conf):
-        from app import cli     # pylint: disable=E0401
+        from app import cli  # pylint: disable=E0401
         cli.loadConfiguration(conf)
 
 

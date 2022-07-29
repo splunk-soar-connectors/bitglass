@@ -5,7 +5,6 @@
 
 import os
 
-
 # Use os.path.abspath() if ever wish running standalone on Windows
 datapath = os.path.join(os.sep, 'store', '')
 loggingpath = os.path.join(datapath, 'app.log')

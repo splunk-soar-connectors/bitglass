@@ -5,23 +5,12 @@
 
 import re
 
-
 import app
-
-# This is the inconvenience to keep the static security scanners happy (could have used import * instead)
-from app.consts import GC_LOGTYPE_CLOUDAUDIT, \
-                       GC_LOGTYPE_ACCESS, \
-                       GC_LOGTYPE_ADMIN, \
-                       GC_LOGTYPE_CLOUDSUMMARY, \
-                       GC_LOGTYPE_SWGWEB, \
-                       GC_LOGTYPE_SWGWEBDLP, \
-                       GC_LOGTYPE_HEALTHPROXY, \
-                       GC_LOGTYPE_HEALTHAPI, \
-                       GC_LOGTYPE_HEALTHSYSTEM, \
-                       GC_RESETTIME
-
 from app.config import Config, Status
-from app.secret import Password, MULTI_PSWD_SEP_CHAR
+# This is the inconvenience to keep the static security scanners happy (could have used import * instead)
+from app.consts import (GC_LOGTYPE_ACCESS, GC_LOGTYPE_ADMIN, GC_LOGTYPE_CLOUDAUDIT, GC_LOGTYPE_CLOUDSUMMARY, GC_LOGTYPE_HEALTHAPI,
+                        GC_LOGTYPE_HEALTHPROXY, GC_LOGTYPE_HEALTHSYSTEM, GC_LOGTYPE_SWGWEB, GC_LOGTYPE_SWGWEBDLP, GC_RESETTIME)
+from app.secret import MULTI_PSWD_SEP_CHAR, Password
 
 try:
     from flask import session

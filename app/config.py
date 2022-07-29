@@ -5,17 +5,17 @@
 
 import copy
 import json
+import logging
 import optparse
 import os
-import sys
-import logging
 import re
+import sys
 import time
 from contextlib import contextmanager
 from datetime import datetime
 
 import app
-from app.env import UpdateLoggingPath, datapath, confpath
+from app.env import UpdateLoggingPath, confpath, datapath
 
 
 def versionTuple(v):
@@ -463,7 +463,7 @@ def setPythonLogging(logger=None, defaultlogfolder=startConf._folder):
 
     if startConf._isEnabled('qradar'):
         # Create logger wrapping qpylib API + Flask
-        from app.flaskinit import log, set_log_level    # pylint: disable=E0401
+        from app.flaskinit import log, set_log_level  # pylint: disable=E0401
         return app.Logger(startConf, log, set_log_level)
 
     # Grab the logger object

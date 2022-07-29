@@ -21,29 +21,14 @@ import json
 import os
 import re
 from datetime import datetime
+
 import requests
 from bs4 import BeautifulSoup
 
 from app.bg import bitglassapi as bgapi
-
-from app.consts import GC_DATE_FORMAT, \
-                        GC_ALERT_USER_MATCH_KEY, \
-                        GC_BG_USERNAME_CONTAINS, \
-                        ERR_CODE_MSG, \
-                        ERR_MSG_UNAVAILABLE, \
-                        PARSE_ERR_MSG, \
-                        INVALID_PARAMS_ERR_MSG, \
-                        INVALID_PARAM_ERR_MSG, \
-                        GC_FIELD_LOGTYPE, \
-                        GC_LOGTYPE_CLOUDSUMMARY, \
-                        GC_LOGTYPE_ACCESS, \
-                        GC_LOGTYPE_CLOUDAUDIT, \
-                        GC_FIELD_DLPPATTERN, \
-                        GC_FIELD_EMAIL, \
-                        GC_FIELD_PATTERNS, \
-                        GC_FIELD_OWNER, \
-                        GC_FIELD_TIME
-
+from app.consts import (ERR_CODE_MSG, ERR_MSG_UNAVAILABLE, GC_ALERT_USER_MATCH_KEY, GC_BG_USERNAME_CONTAINS, GC_DATE_FORMAT, GC_FIELD_DLPPATTERN,
+                        GC_FIELD_EMAIL, GC_FIELD_LOGTYPE, GC_FIELD_OWNER, GC_FIELD_PATTERNS, GC_FIELD_TIME, GC_LOGTYPE_ACCESS,
+                        GC_LOGTYPE_CLOUDAUDIT, GC_LOGTYPE_CLOUDSUMMARY, INVALID_PARAM_ERR_MSG, INVALID_PARAMS_ERR_MSG, PARSE_ERR_MSG)
 
 conf = None
 

@@ -78,7 +78,7 @@ logger = Logger()
 # Skip this part for the merged module support
 try:
     # Export for gunicorn (and QRadar, required by the upgrade scenario to be app:app)
-    from app.flaskinit import application as app   # noqa
+    from app.flaskinit import application as app  # noqa
 
     # UI initialized successfully
     pass
