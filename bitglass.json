@@ -11,11 +11,11 @@
     "product_version_regex": ".*",
     "publisher": "Bitglass Inc.",
     "license": "Copyright (c) 2022 alexeiyur",
-    "app_version": "1.0.14",
+    "app_version": "1.1.0",
     "utctime_updated": "2022-01-07T21:14:11.000000Z",
     "package_name": "phantom_bitglass",
     "main_module": "bitglass_connector.py",
-    "min_phantom_version": "5.2.0",
+    "min_phantom_version": "5.3.0",
     "app_wizard_version": "1.0.0",
     "configuration": {
         "auth_token": {
@@ -50,13 +50,13 @@
             "order": 5
         },
         "enable_access": {
-            "description": "Pull Bitglass Access logs :",
+            "description": "Pull Bitglass access logs :",
             "data_type": "boolean",
             "default": true,
             "order": 6
         },
         "filter_access": {
-            "description": "DLP Pattern for Access",
+            "description": "DLP pattern for access",
             "data_type": "string",
             "default": "Malware.*|PCI.*",
             "order": 7
@@ -68,7 +68,7 @@
             "order": 8
         },
         "filter_cloudaudit": {
-            "description": "DLP Pattern for CloudAudit",
+            "description": "DLP pattern for CloudAudit",
             "data_type": "string",
             "default": "^PCI.*",
             "order": 9
