@@ -17,15 +17,16 @@
     "main_module": "bitglass_connector.py",
     "min_phantom_version": "5.3.0",
     "app_wizard_version": "1.0.0",
+    "fips_compliant": false,
     "configuration": {
         "auth_token": {
-            "description": "OAuth 2 Authentication Token",
+            "description": "OAuth 2 authentication token",
             "data_type": "password",
             "required": true,
             "order": 0
         },
         "username": {
-            "description": "Username (Basic Authentication)",
+            "description": "Username (basic authentication)",
             "data_type": "string",
             "order": 1
         },
@@ -36,7 +37,7 @@
             "order": 2
         },
         "password": {
-            "description": "Password (Basic Authentication)",
+            "description": "Password (basic authentication)",
             "data_type": "password",
             "order": 3
         },
