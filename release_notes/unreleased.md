@@ -1,7 +1,1 @@
 **Unreleased**
-* Drop Python 2 support
-* Support saving the log stream context to a variable for platforms where File I/O is not available
-* Improve some log messages including the ones for log stream context reset
-* Fix parsing the syslog sink destination
-* Minor bug fixes (including ESLint, flake8 and other static code scanners' warnings and exceptions)
-* Code refactoring and cleanups
