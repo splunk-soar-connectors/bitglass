@@ -1,27 +1,15 @@
 # File: app/logevent.py
 #
-# Licensed under the Apache License, Version 2.0 (the "License");
-# you may not use this file except in compliance with the License.
-# You may obtain a copy of the License at
-#
-#     http://www.apache.org/licenses/LICENSE-2.0
-#
-# Unless required by applicable law or agreed to in writing, software distributed under
-# the License is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND,
-# either express or implied. See the License for the specific language governing permissions
-# and limitations under the License.
-#
-
-"""
-(C) Copyright Bitglass Inc. 2021. All Rights Reserved.
-Author: eng@bitglass.com
-"""
+# Author: alexeiyur AT g m 4 i l . c 0 m
+# Licensed under the MIT License (https://mit-license.org/)
 
 import json
 import logging
 import logging.handlers
-import sys
 from datetime import datetime
+
+# import sys
+
 
 # Priority <xy> is already prepended by logging.handlers.emit()
 SYSLOG_HEADER = '%s bitglass :%s'
@@ -42,7 +30,7 @@ def pushLog(d, address, logTime=datetime.utcnow()):
         # NOTE Having 'QRadar' for the logger name below caused message payload leaks to log files through stdout
         # Also, make sure none of other handlers are called inadvertently
         qradar_logger = logging.getLogger('com.bitglass.lss')
-        qradar_logger.propagate = 0
+        qradar_logger.propagate = False
 
         qradar_logger.setLevel(logging.INFO)
         handler = logging.handlers.SysLogHandler(address=address)
@@ -51,11 +39,12 @@ def pushLog(d, address, logTime=datetime.utcnow()):
 
     msg = json.dumps(d)
     syslogMsg = SYSLOG_HEADER % (datetime.strftime(logTime, SYSLOG_HEADER_DATEFORMAT), msg)
-    qradar_logger.info(syslogMsg)
+    qradar_logger.info(syslogMsg)   # type: ignore[union-attr]
 
     return msg
 
 
+"""
 def main():
     args = sys.argv[1:]
     host = 'localhost'
@@ -73,9 +62,10 @@ def main():
     '"syslogheader": "<110>1 2020-02-25T13:44:50.038000Z api.bitglass.com NILVALUE NILVALUE access",'
     '"device": "Mac OS X 10.15.3", "transactionid": "b862f16858171579ea8e6001848ed1d527f0daca [25 Feb 2020 13:44:50]",'
     '"ipaddress": "v.x.y.z", "url": "/accounts/server_logout/", "request": "", "activity": "Logout", "emailsenttime": "",'
-    '"useragent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_3) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/80.0.3987.122 Safari/537.36",'
+    '"useragent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_3) AppleWebKit/537.36 (KHTML, '
+        'like Gecko) Chrome/80.0.3987.122 Safari/537.36",'
     '"emailto": ""}'
-    print(testPayload)
+    print(testPayload)     # noqa
 
     pushLog(testPayload, (host, 514))
     pushLog(testPayload, (host, 514))
@@ -83,3 +73,4 @@ def main():
 
 if __name__ == '__main__':
     main()
+"""

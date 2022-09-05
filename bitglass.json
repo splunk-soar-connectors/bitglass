@@ -10,22 +10,23 @@
     "python_version": "3",
     "product_version_regex": ".*",
     "publisher": "Bitglass Inc.",
-    "license": "Copyright (c) 2021-2022 Bitglass App Inc.",
-    "app_version": "1.0.11",
+    "license": "Copyright (c) 2022 alexeiyur",
+    "app_version": "1.1.0",
     "utctime_updated": "2022-01-07T21:14:11.000000Z",
     "package_name": "phantom_bitglass",
     "main_module": "bitglass_connector.py",
-    "min_phantom_version": "5.1.0",
+    "min_phantom_version": "5.3.0",
     "app_wizard_version": "1.0.0",
+    "fips_compliant": false,
     "configuration": {
         "auth_token": {
-            "description": "OAuth 2 Authentication Token",
+            "description": "OAuth 2 authentication token",
             "data_type": "password",
             "required": true,
             "order": 0
         },
         "username": {
-            "description": "Username (Basic Authentication)",
+            "description": "Username (basic authentication)",
             "data_type": "string",
             "order": 1
         },
@@ -36,7 +37,7 @@
             "order": 2
         },
         "password": {
-            "description": "Password (Basic Authentication)",
+            "description": "Password (basic authentication)",
             "data_type": "password",
             "order": 3
         },
@@ -50,13 +51,13 @@
             "order": 5
         },
         "enable_access": {
-            "description": "Pull Bitglass Access logs :",
+            "description": "Pull Bitglass access logs :",
             "data_type": "boolean",
             "default": true,
             "order": 6
         },
         "filter_access": {
-            "description": "DLP Pattern for Access",
+            "description": "DLP pattern for access",
             "data_type": "string",
             "default": "Malware.*|PCI.*",
             "order": 7
@@ -68,7 +69,7 @@
             "order": 8
         },
         "filter_cloudaudit": {
-            "description": "DLP Pattern for CloudAudit",
+            "description": "DLP pattern for CloudAudit",
             "data_type": "string",
             "default": "^PCI.*",
             "order": 9
@@ -904,7 +905,7 @@
             },
             {
                 "module": "certifi",
-                "input_file": "wheels/shared/certifi-2021.10.8-py2.py3-none-any.whl"
+                "input_file": "wheels/py3/certifi-2022.6.15-py3-none-any.whl"
             },
             {
                 "module": "chardet",
@@ -935,12 +936,8 @@
                 "input_file": "wheels/shared/requests-2.25.1-py2.py3-none-any.whl"
             },
             {
-                "module": "six",
-                "input_file": "wheels/shared/six-1.15.0-py2.py3-none-any.whl"
-            },
-            {
                 "module": "soupsieve",
-                "input_file": "wheels/py3/soupsieve-2.3.1-py3-none-any.whl"
+                "input_file": "wheels/py3/soupsieve-2.3.2.post1-py3-none-any.whl"
             },
             {
                 "module": "typing_extensions",
@@ -948,7 +945,7 @@
             },
             {
                 "module": "urllib3",
-                "input_file": "wheels/shared/urllib3-1.26.9-py2.py3-none-any.whl"
+                "input_file": "wheels/shared/urllib3-1.26.12-py2.py3-none-any.whl"
             },
             {
                 "module": "zipp",
@@ -968,11 +965,11 @@
             },
             {
                 "module": "MarkupSafe",
-                "input_file": "wheels/py39/MarkupSafe-2.1.1-cp39-cp39-manylinux_2_17_x86_64.manylinux2014_x86_64.whl"
+                "input_file": "wheels/py39/MarkupSafe-2.0.1-cp39-cp39-manylinux_2_5_x86_64.manylinux1_x86_64.manylinux_2_12_x86_64.manylinux2010_x86_64.manylinux_2_17_x86_64.manylinux2014_x86_64.whl"
             },
             {
                 "module": "Werkzeug",
-                "input_file": "wheels/py3/Werkzeug-2.0.3-py3-none-any.whl"
+                "input_file": "wheels/py3/Werkzeug-2.1.2-py3-none-any.whl"
             },
             {
                 "module": "beautifulsoup4",
@@ -980,7 +977,7 @@
             },
             {
                 "module": "certifi",
-                "input_file": "wheels/shared/certifi-2021.10.8-py2.py3-none-any.whl"
+                "input_file": "wheels/py3/certifi-2022.6.15-py3-none-any.whl"
             },
             {
                 "module": "chardet",
@@ -988,7 +985,7 @@
             },
             {
                 "module": "click",
-                "input_file": "wheels/py3/click-8.0.4-py3-none-any.whl"
+                "input_file": "wheels/py3/click-8.1.3-py3-none-any.whl"
             },
             {
                 "module": "idna",
@@ -996,23 +993,19 @@
             },
             {
                 "module": "itsdangerous",
-                "input_file": "wheels/py3/itsdangerous-2.1.1-py3-none-any.whl"
+                "input_file": "wheels/py3/itsdangerous-2.1.2-py3-none-any.whl"
             },
             {
                 "module": "requests",
                 "input_file": "wheels/shared/requests-2.25.1-py2.py3-none-any.whl"
             },
             {
-                "module": "six",
-                "input_file": "wheels/shared/six-1.15.0-py2.py3-none-any.whl"
-            },
-            {
                 "module": "soupsieve",
-                "input_file": "wheels/py3/soupsieve-2.3.1-py3-none-any.whl"
+                "input_file": "wheels/py3/soupsieve-2.3.2.post1-py3-none-any.whl"
             },
             {
                 "module": "urllib3",
-                "input_file": "wheels/shared/urllib3-1.26.9-py2.py3-none-any.whl"
+                "input_file": "wheels/shared/urllib3-1.26.12-py2.py3-none-any.whl"
             }
         ]
     }
