@@ -2,28 +2,19 @@
 # Bitglass
 
 Publisher: Bitglass Inc\.  
-Connector Version: 1\.0\.11  
+Connector Version: 1\.1\.0  
 Product Vendor: Bitglass Inc\.  
 Product Name: Bitglass Phantom App  
 Product Version Supported (regex): "\.\*"  
-Minimum Product Version: 5\.1\.0  
+Minimum Product Version: 5\.3\.0  
 
 The app pulls Bitglass cloudaudit and access log data once configured and parses the specified DLP patterns from the asset configuration page
 
 [comment]: # " File: README.md"
 [comment]: # ""
-[comment]: # "  Copyright (c) 2021-2022 Bitglass App Inc."
+[comment]: # "    Copyright (c) 2022 alexeiyur"
 [comment]: # ""
-[comment]: # "  Licensed under the Apache License, Version 2.0 (the 'License');"
-[comment]: # "  you may not use this file except in compliance with the License."
-[comment]: # "  You may obtain a copy of the License at"
-[comment]: # ""
-[comment]: # "      http://www.apache.org/licenses/LICENSE-2.0"
-[comment]: # ""
-[comment]: # "  Unless required by applicable law or agreed to in writing, software distributed under"
-[comment]: # "  the License is distributed on an 'AS IS' BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND,"
-[comment]: # "  either express or implied. See the License for the specific language governing permissions"
-[comment]: # "  and limitations under the License."
+[comment]: # "    Licensed under the MIT License (https://mit-license.org/)"
 [comment]: # ""
 The app pulls cloudaudit and access Bitglass log data filtered down to the specified DLP patterns.
 It also provides actions for access to Bitglass REST APIs for group and user manipulation. A sample
@@ -142,15 +133,15 @@ The below configuration variables are required for this Connector to operate.  T
 
 VARIABLE | REQUIRED | TYPE | DESCRIPTION
 -------- | -------- | ---- | -----------
-**auth\_token** |  required  | password | OAuth 2 Authentication Token
-**username** |  optional  | string | Username \(Basic Authentication\)
+**auth\_token** |  required  | password | OAuth 2 authentication token
+**username** |  optional  | string | Username \(basic authentication\)
 **api\_url** |  required  | string | Bitglass API URL
-**password** |  optional  | password | Password \(Basic Authentication\)
+**password** |  optional  | password | Password \(basic authentication\)
 **proxies** |  optional  | password | Proxy settings for Bitglass API, format\: https=https\://usr\:pswd\@1\.2\.3\.4\:999
-**enable\_access** |  optional  | boolean | Pull Bitglass Access logs \:
-**filter\_access** |  optional  | string | DLP Pattern for Access
+**enable\_access** |  optional  | boolean | Pull Bitglass access logs \:
+**filter\_access** |  optional  | string | DLP pattern for access
 **enable\_cloudaudit** |  optional  | boolean | Pull Bitglass CloudAudit logs \:
-**filter\_cloudaudit** |  optional  | string | DLP Pattern for CloudAudit
+**filter\_cloudaudit** |  optional  | string | DLP pattern for CloudAudit
 
 ### Supported Actions  
 [test connectivity](#action-test-connectivity) - Validate the asset configuration for connectivity using supplied configuration  
