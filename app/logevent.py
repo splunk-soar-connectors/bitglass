@@ -1,3 +1,16 @@
+# Copyright (c) 2025 Splunk Inc.
+#
+# Licensed under the Apache License, Version 2.0 (the "License");
+# you may not use this file except in compliance with the License.
+# You may obtain a copy of the License at
+#
+#     http://www.apache.org/licenses/LICENSE-2.0
+#
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
 # File: app/logevent.py
 #
 # Author: alexeiyur AT g m 4 i l . c 0 m
@@ -8,13 +21,14 @@ import logging
 import logging.handlers
 from datetime import datetime
 
+
 # import sys
 
 
 # Priority <xy> is already prepended by logging.handlers.emit()
-SYSLOG_HEADER = '%s bitglass :%s'
+SYSLOG_HEADER = "%s bitglass :%s"
 # Feb 21 11:32:34
-SYSLOG_HEADER_DATEFORMAT = '%b %d %H:%M:%S'
+SYSLOG_HEADER_DATEFORMAT = "%b %d %H:%M:%S"
 
 qradar_address = None
 qradar_logger = None
@@ -29,7 +43,7 @@ def pushLog(d, address, logTime=datetime.utcnow()):
     if address != qradar_address:
         # NOTE Having 'QRadar' for the logger name below caused message payload leaks to log files through stdout
         # Also, make sure none of other handlers are called inadvertently
-        qradar_logger = logging.getLogger('com.bitglass.lss')
+        qradar_logger = logging.getLogger("com.bitglass.lss")
         qradar_logger.propagate = False
 
         qradar_logger.setLevel(logging.INFO)
@@ -39,7 +53,7 @@ def pushLog(d, address, logTime=datetime.utcnow()):
 
     msg = json.dumps(d)
     syslogMsg = SYSLOG_HEADER % (datetime.strftime(logTime, SYSLOG_HEADER_DATEFORMAT), msg)
-    qradar_logger.info(syslogMsg)   # type: ignore[union-attr]
+    qradar_logger.info(syslogMsg)  # type: ignore[union-attr]
 
     return msg
 

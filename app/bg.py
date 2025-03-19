@@ -1,3 +1,16 @@
+# Copyright (c) 2025 Splunk Inc.
+#
+# Licensed under the Apache License, Version 2.0 (the "License");
+# you may not use this file except in compliance with the License.
+# You may obtain a copy of the License at
+#
+#     http://www.apache.org/licenses/LICENSE-2.0
+#
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
 # File: app/bg.py
 #
 # Author: alexeiyur AT g m 4 i l . c 0 m
@@ -19,12 +32,26 @@ from requests.auth import AuthBase, HTTPBasicAuth
 import app
 from app.config import open_atomic, setPythonLogging, setPythonLoggingLevel, versionTuple
 from app.configForward import ConfigForward, log_types
+
 # This is the inconvenience to keep the static security scanners happy (could have used import * instead)
-from app.consts import (GC_FIELD_INGESTEDTIME, GC_FIELD_INITIALTIME, GC_FIELD_LOGTYPE, GC_FIELD_NEXTPAGETOKEN, GC_LOGTYPE_ACCESS,
-                        GC_LOGTYPE_ADMIN, GC_LOGTYPE_CLOUDAUDIT, GC_LOGTYPE_CLOUDSUMMARY, GC_LOGTYPE_HEALTHAPI, GC_LOGTYPE_HEALTHPROXY,
-                        GC_LOGTYPE_HEALTHSYSTEM, GC_LOGTYPE_SWGWEB, GC_LOGTYPE_SWGWEBDLP)
+from app.consts import (
+    GC_FIELD_INGESTEDTIME,
+    GC_FIELD_INITIALTIME,
+    GC_FIELD_LOGTYPE,
+    GC_FIELD_NEXTPAGETOKEN,
+    GC_LOGTYPE_ACCESS,
+    GC_LOGTYPE_ADMIN,
+    GC_LOGTYPE_CLOUDAUDIT,
+    GC_LOGTYPE_CLOUDSUMMARY,
+    GC_LOGTYPE_HEALTHAPI,
+    GC_LOGTYPE_HEALTHPROXY,
+    GC_LOGTYPE_HEALTHSYSTEM,
+    GC_LOGTYPE_SWGWEB,
+    GC_LOGTYPE_SWGWEBDLP,
+)
 from app.env import UpdateDataPath, datapath, loggingpath
 from app.logevent import pushLog
+
 
 # from threading import get_ident
 
@@ -39,9 +66,7 @@ class OAuth2Token(AuthBase):
         self.access_token = access_token
 
     def __call__(self, request):
-        request.headers['Authorization'] = 'Bearer {0}'.format(
-            self.access_token
-        )
+        request.headers["Authorization"] = f"Bearer {self.access_token}"
         return request
 
 
@@ -83,7 +108,7 @@ def Initialize(ctx, datapath=datapath, skipArgs=False, _logger=None, _conf=None,
             # Be sure to update the logging level once the config is loaded
             setPythonLoggingLevel(app.logger, conf)
 
-            if not skipArgs or conf._isEnabled('debug'):
+            if not skipArgs or conf._isEnabled("debug"):
                 # Parse and apply command line options. Always process for a local dev run ('debug'), it's compatible
                 conf._applyOptionsOnce()
         else:
@@ -94,18 +119,18 @@ def Initialize(ctx, datapath=datapath, skipArgs=False, _logger=None, _conf=None,
         # Override the config settings and disable daemon mode for explicit cli context
         ctx.ctx.bgLoadConfig(conf)
         conf._isDaemon = False  # type: ignore[union-attr]
-    conf._calculateOptions()    # type: ignore[union-attr]
+    conf._calculateOptions()  # type: ignore[union-attr]
 
     if not lastLogFile or updatepath:
         cnf = _conf or conf
 
         # For Splunk app upgrade, manually 'cp lastlog.json ../local/' before upgrading to ingest incrementally
         # This is because it was saved in default/ in the previous version 1.0.8 and default/ is yanked during upgrade
-        folder = cnf._folder    # type: ignore[union-attr]
-        if (os.path.sep + 'default') in cnf._folder:    # type: ignore[union-attr]
-            folder = os.path.join(folder, '..', 'local', '')
+        folder = cnf._folder  # type: ignore[union-attr]
+        if (os.path.sep + "default") in cnf._folder:  # type: ignore[union-attr]
+            folder = os.path.join(folder, "..", "local", "")
 
-        lastLogFile = LastLog(os.path.join(folder, 'lastlog'), context)
+        lastLogFile = LastLog(os.path.join(folder, "lastlog"), context)
 
     return conf
 
@@ -122,7 +147,7 @@ class SyslogUDPHandler(socketserver.BaseRequestHandler):
         try:
             server = socketserver.UDPServer((host, port), cls)
             server.serve_forever(poll_interval=poll_interval)
-        except (IOError, SystemExit):
+        except (OSError, SystemExit):
             raise
         except KeyboardInterrupt:
             app.logger.info("Crtl+C Pressed. Shutting down.")
@@ -133,29 +158,25 @@ class SyslogUDPHandler(socketserver.BaseRequestHandler):
 
         # Strip the string and convert to json
         try:
-            conf = self.kwargs['conf']      # type: ignore[index]
-            condition = self.kwargs['condition']    # type: ignore[index]
+            conf = self.kwargs["conf"]  # type: ignore[index]
+            condition = self.kwargs["condition"]  # type: ignore[index]
 
-            s = '%s :{' % conf.customer.lower()
+            s = f"{conf.customer.lower()} :{{"
             start = data.find(s) + len(s) - 1
-            end = data.rfind('}') + 1
-            logData = json.loads('{"response":{"data":[' + data[start:end] + ']}}')
+            end = data.rfind("}") + 1
+            logData = json.loads('{"response":{"data":[' + data[start:end] + "]}}")
 
             with conf._lock(condition, notify=False):
-                transferLogs(None, logTypes=None, logData=logData, **self.kwargs)   # type: ignore[misc]  # pylint: disable=E1134
+                transferLogs(None, logTypes=None, logData=logData, **self.kwargs)  # type: ignore[misc]  # pylint: disable=E1134
 
         except Exception as ex:
-            app.logger.warning('{0}\n - Discarded bad event message in syslog stream:\n"{1}"\n- from sender {2}'.format(
-                str(ex),
-                data,
-                self.client_address[0])
-            )
+            app.logger.warning(f'{ex!s}\n - Discarded bad event message in syslog stream:\n"{data}"\n- from sender {self.client_address[0]}')
             return
 
 
-TIME_FORMAT_URL = '%Y-%m-%dT%H:%M:%SZ'
-TIME_FORMAT_LOG = '%d %b %Y %H:%M:%S'
-TIME_FORMAT_ISO = '%Y-%m-%dT%H:%M:%S.%fZ'
+TIME_FORMAT_URL = "%Y-%m-%dT%H:%M:%SZ"
+TIME_FORMAT_LOG = "%d %b %Y %H:%M:%S"
+TIME_FORMAT_ISO = "%Y-%m-%dT%H:%M:%S.%fZ"
 
 
 def strptime(s):
@@ -169,8 +190,8 @@ def strptime(s):
 
 
 class LastLog:
-    def __init__(self, fname, context=None, shared=None, logtype=''):
-        self.fname = '{0}-{1}.json'.format(fname, logtype) if shared else '{0}.json'.format(fname)
+    def __init__(self, fname, context=None, shared=None, logtype=""):
+        self.fname = f"{fname}-{logtype}.json" if shared else f"{fname}.json"
         self.shared = shared
         self.log = {}
         self.logtype = logtype
@@ -179,13 +200,17 @@ class LastLog:
         try:
             if self.context is not None:
                 # No file system, also may be flat (the old format). That's Demisto limitation so far
-                self.log = (({logtype: json.loads(context[logtype])}
-                             if isinstance(context[logtype], str)
-                             else {logtype: context[logtype]})
-                            if logtype in context
-                            else {logtype: {}}) if self.shared else dict(context)
+                self.log = (
+                    (
+                        ({logtype: json.loads(context[logtype])} if isinstance(context[logtype], str) else {logtype: context[logtype]})
+                        if logtype in context
+                        else {logtype: {}}
+                    )
+                    if self.shared
+                    else dict(context)
+                )
             else:
-                with open(self.fname, 'r') as f:
+                with open(self.fname) as f:
                     self.log = json.load(f)
 
             if self.shared is None:
@@ -194,7 +219,7 @@ class LastLog:
                     if self.get(logtype=lt) and isinstance(self.log[lt], str):
                         self.log[lt] = json.loads(self.log[lt])
         except Exception as ex:
-            app.logger.info('{0}\n - Last log file {1} not found'.format(str(ex), self.fname))
+            app.logger.info(f"{ex!s}\n - Last log file {self.fname} not found")
             lastLog = {}
             if self.shared:
                 lastLog[logtype] = self.shared.log[logtype]
@@ -216,10 +241,10 @@ class LastLog:
                 self.context[self.logtype] = self.log[self.logtype]
                 self.context.save()
             else:
-                with open_atomic(self.fname, 'w') as f:
+                with open_atomic(self.fname, "w") as f:
                     json.dump(self.log, f, indent=4, sort_keys=True)
         except Exception as ex:
-            app.logger.error('Could not save last log event across app sessions: %s' % ex)
+            app.logger.error(f"Could not save last log event across app sessions: {ex}")
 
     def get(self, field=None, logtype=None):
         if logtype is None:
@@ -254,7 +279,7 @@ class LastLog:
             # For diagnostics purposes (for some weird cases of limited SIEM license issues or deployment irregularities etc.),
             # keep the earliest (initial) timestamp of past requests starting from the most recent reset (log rewind)
             # This way we can prove that the missing data is due to some SIEM platform vagary rather than our bug
-            it = self.get('_initialtime', logtype)
+            it = self.get("_initialtime", logtype)
             if it:
                 # Copy over, this never changes unless logs get rewound
                 ll[GC_FIELD_INITIALTIME] = it
@@ -268,15 +293,15 @@ class LastLog:
             # This is a successful request with empty (exhausted) data so use the last one but handle the (corner) case
             # of error logged inbetween (coinsiding with app relaunch) by clearing the error entries if there are any
             if self.get(logtype=logtype):
-                if self.get('_failedtime', logtype):
-                    del self.log[logtype]['_failedtime']
-                if self.get('_errormessage', logtype):
-                    del self.log[logtype]['_errormessage']
+                if self.get("_failedtime", logtype):
+                    del self.log[logtype]["_failedtime"]
+                if self.get("_errormessage", logtype):
+                    del self.log[logtype]["_errormessage"]
 
         if logtype in self.log:
             return json.dumps(self.log[logtype])
         else:
-            return ''
+            return ""
 
     def updateError(self, conf, errormsg, resettime, logtype=None):
         if logtype is None:
@@ -293,16 +318,16 @@ class LastLog:
         # good messages unless by fluke of hitting upon a very recent message). Assume the initial
         # data period just the same as the reading code does when starting up.
         # This provides for an alternative hack to reset the log type: edit the file and rename the 'time' field.
-        if not self.get('time', logtype) or resettime:
-            if self.get('time', logtype):
+        if not self.get("time", logtype) or resettime:
+            if self.get("time", logtype):
                 # Backup the original 'time' field if present by renaming it first
-                self.log[logtype]['_time'] = self.log[logtype]['time']
+                self.log[logtype]["_time"] = self.log[logtype]["time"]
             t = datetime.utcnow() + timedelta(seconds=-1 * conf.log_initial) if not resettime else resettime
-            self.log[logtype]['time'] = t.strftime(TIME_FORMAT_LOG)
+            self.log[logtype]["time"] = t.strftime(TIME_FORMAT_LOG)
 
         # Update with failure timestamp and message, keep last ingested success timestamp
-        self.log[logtype]['_failedtime'] = datetime.utcnow().strftime(TIME_FORMAT_LOG)
-        self.log[logtype]['_errormessage'] = str(errormsg)
+        self.log[logtype]["_failedtime"] = datetime.utcnow().strftime(TIME_FORMAT_LOG)
+        self.log[logtype]["_errormessage"] = str(errormsg)
         self.dump()
 
     def clobber(self, resettime=None, logtype=None):
@@ -330,11 +355,17 @@ class LastLog:
 
 
 def isOldLogType(lt):
-    """ Different data order (specific to the storage on the server), npt format etc.
-    """
-    return lt in [GC_LOGTYPE_ACCESS, GC_LOGTYPE_ADMIN, GC_LOGTYPE_CLOUDAUDIT, GC_LOGTYPE_CLOUDSUMMARY,
-                  # Old APIs do return health* data (a bug) and npt is in the old format anyways!
-                  GC_LOGTYPE_HEALTHPROXY, GC_LOGTYPE_HEALTHAPI, GC_LOGTYPE_HEALTHSYSTEM]
+    """Different data order (specific to the storage on the server), npt format etc."""
+    return lt in [
+        GC_LOGTYPE_ACCESS,
+        GC_LOGTYPE_ADMIN,
+        GC_LOGTYPE_CLOUDAUDIT,
+        GC_LOGTYPE_CLOUDSUMMARY,
+        # Old APIs do return health* data (a bug) and npt is in the old format anyways!
+        GC_LOGTYPE_HEALTHPROXY,
+        GC_LOGTYPE_HEALTHAPI,
+        GC_LOGTYPE_HEALTHSYSTEM,
+    ]
 
 
 def getAPIToken(logData, conf, logType):
@@ -342,10 +373,10 @@ def getAPIToken(logData, conf, logType):
         return None
 
     try:
-        token = logData['nextpagetoken']
+        token = logData["nextpagetoken"]
         d = json.loads(base64.b64decode(token))
     except Exception as ex:
-        app.logger.warning('Invalid token returned: %s %s' % (token, ex))   # nosemgrep
+        app.logger.warning(f"Invalid token returned: {token} {ex}")  # nosemgrep
         return None
 
     if d == {}:
@@ -353,98 +384,91 @@ def getAPIToken(logData, conf, logType):
         return None
 
     if isOldLogType(logType):
-        if 'log_id' not in d:
-            app.logger.warning('No "log_id" encoded in logtype "%s" returned token: %s' % (logType, token))     # nosemgrep
+        if "log_id" not in d:
+            app.logger.warning(f'No "log_id" encoded in logtype "{logType}" returned token: {token}')  # nosemgrep
             return None
 
-        if 'datetime' not in d:
-            app.logger.warning('No "datetime" encoded in logtype "%s" returned token: %s' % (logType, token))   # nosemgrep
+        if "datetime" not in d:
+            app.logger.warning(f'No "datetime" encoded in logtype "{logType}" returned token: {token}')  # nosemgrep
             return None
     else:
-        if 'start_time' not in d:
-            app.logger.warning('No "start_time" encoded in logtype "%s" returned token: %s' % (logType, token))  # nosemgrep
+        if "start_time" not in d:
+            app.logger.warning(f'No "start_time" encoded in logtype "{logType}" returned token: {token}')  # nosemgrep
             return None
 
-        if 'end_time' not in d:
-            app.logger.warning('No "end_time" encoded in logtype "%s" returned token: %s' % (logType, token))   # nosemgrep
+        if "end_time" not in d:
+            app.logger.warning(f'No "end_time" encoded in logtype "{logType}" returned token: {token}')  # nosemgrep
             return None
 
-        if 'page' not in d:
-            app.logger.warning('No "page" encoded in logtype "%s" returned token: %s' % (logType, token))       # nosemgrep
+        if "page" not in d:
+            app.logger.warning(f'No "page" encoded in logtype "{logType}" returned token: {token}')  # nosemgrep
             return None
 
     return token
 
 
-SKIPPED_REQUEST_ERROR = 'UNAUTHORiZED'
+SKIPPED_REQUEST_ERROR = "UNAUTHORiZED"
 
 
 def RestParamsLogs(_, host, api_ver, logType, npt, dtime):
-    url = ('https://portal.' + host) if host else ''
-    endpoint = '/api/bitglassapi/logs'
+    url = ("https://portal." + host) if host else ""
+    endpoint = "/api/bitglassapi/logs"
 
     # Adjust the version upwards to the minimum supported version for new log types as necessary
     # Make sure it's lower before overriding to avoid downgrading the version
     if logType in [GC_LOGTYPE_SWGWEB, GC_LOGTYPE_SWGWEBDLP]:
-        if versionTuple(api_ver) < versionTuple('1.1.0'):
-            api_ver = '1.1.0'
+        if versionTuple(api_ver) < versionTuple("1.1.0"):
+            api_ver = "1.1.0"
     elif logType in [GC_LOGTYPE_HEALTHPROXY, GC_LOGTYPE_HEALTHAPI, GC_LOGTYPE_HEALTHSYSTEM]:
-        if versionTuple(api_ver) < versionTuple('1.1.5'):
-            api_ver = '1.1.5'
+        if versionTuple(api_ver) < versionTuple("1.1.5"):
+            api_ver = "1.1.5"
 
     if npt is None:
         urlTime = dtime.strftime(TIME_FORMAT_URL)
-        dataParams = '/?cv={0}&responseformat=json&type={1}&startdate={2}'.format(api_ver, str(logType), urlTime)
+        dataParams = f"/?cv={api_ver}&responseformat=json&type={logType!s}&startdate={urlTime}"
     else:
-        dataParams = '/?cv={0}&responseformat=json&type={1}&nextpagetoken={2}'.format(api_ver, str(logType), npt)
+        dataParams = f"/?cv={api_ver}&responseformat=json&type={logType!s}&nextpagetoken={npt}"
 
     return (url, endpoint, dataParams)
 
 
 def RestParamsConfig(_, host, api_ver, type_, action):
-    url = ('https://portal.' + host) if host else ''
+    url = ("https://portal." + host) if host else ""
 
     # This is a POST, version is not a proper param, unlike in logs (?? for some reason)
-    endpoint = '/api/bitglassapi/config/v{0}/?type={1}&action={2}'.format(api_ver, type_, action)
+    endpoint = f"/api/bitglassapi/config/v{api_ver}/?type={type_}&action={action}"
     return (url, endpoint)
 
 
-def restCall(_,
-             url, endpoint, dataParams,
-             auth_token,
-             proxies=None,
-             verify=True,
-             username=None,
-             password=None):
+def restCall(_, url, endpoint, dataParams, auth_token, proxies=None, verify=True, username=None, password=None):
     if dataParams is None:
-        dataParams = ''
+        dataParams = ""
 
     # BANDIT    No, this is not a 'hardcoded password'. This is a check if any password supplied by the user.
-    if auth_token is None or auth_token == '':  # nosec
-        auth_type = 'Basic'
+    if auth_token is None or auth_token == "":  # nosec
+        auth_type = "Basic"
 
         # Must have creds supplied for basic
-        if any(a() for a in [lambda: username is None or username == '',
-                             lambda: password is None or password == '']):    # nosec
+        if any(a() for a in [lambda: username is None or username == "", lambda: password is None or password == ""]):  # nosec
             # BANDIT    ^^^ No, this is not a 'hardcoded password'. This is a check if any password supplied by the user.
             # Emulate an http error instead of calling with empty password (when the form initially loads)
             # to avoid counting against API count quota
             raise HTTPError(url + endpoint, 401, SKIPPED_REQUEST_ERROR, {}, None)
 
-        auth_token = base64.b64encode((username + ':' + password).encode('utf-8'))
-        auth_token = auth_token.decode('utf-8')
+        auth_token = base64.b64encode((username + ":" + password).encode("utf-8"))
+        auth_token = auth_token.decode("utf-8")
     else:
-        auth_type = 'Bearer'
+        auth_type = "Bearer"
 
     # Use requests by default if available
     r = None
 
     # The authentication header is added below
-    headers = {'Content-Type': 'application/json'}
+    headers = {"Content-Type": "application/json"}
 
     d = {}
     with requests.Session() as s:
-        if auth_type == 'Basic':
+        if auth_type == "Basic":
             s.auth = HTTPBasicAuth(username, password)
         else:
             s.auth = OAuth2Token(auth_token)
@@ -475,24 +499,23 @@ def restCall(_,
 def RestCall(_, endpoint, dataParams):
     return restCall(
         _,
-        'https://portal.' + conf.host,  # type: ignore[union-attr]
+        "https://portal." + conf.host,  # type: ignore[union-attr]
         endpoint,
         dataParams,
         conf._auth_token.pswd,  # type: ignore[union-attr]
-        (conf.proxies, conf._proxies_pswd.pswd),    # type: ignore[union-attr]
-        conf.verify,    # type: ignore[union-attr]
-        conf._username,     # type: ignore[union-attr]
-        conf._password.pswd     # type: ignore[union-attr]
+        (conf.proxies, conf._proxies_pswd.pswd),  # type: ignore[union-attr]
+        conf.verify,  # type: ignore[union-attr]
+        conf._username,  # type: ignore[union-attr]
+        conf._password.pswd,  # type: ignore[union-attr]
     )
 
 
 def RestCallConfig(_, endpoint, dataParams):
-    """ Do basic exception handling, just what is necessary for the Bitglass API for integration into SIEM
-    """
+    """Do basic exception handling, just what is necessary for the Bitglass API for integration into SIEM"""
     try:
         return RestCall(_, endpoint, dataParams)
     except Exception as ex:
-        msg = 'Bitglass Config API: request %s(%s) failed with %s' % (endpoint, dataParams, ex)
+        msg = f"Bitglass Config API: request {endpoint}({dataParams}) failed with {ex}"
         # Avoid polluting the log if no valid settings have been set yet
         if SKIPPED_REQUEST_ERROR not in msg:
             app.logger.error(msg)
@@ -509,12 +532,12 @@ def processLogEvents(ctx, conf, logType, data, nextPageToken, logTime, isSyslog)
     # No fix planned, so this workaround is a keeper
     isOldLt = isOldLogType(logType)
     if nextPageToken is None and not isOldLt and not isSyslog:
-        raise ValueError('Invalid page token for swgweb* log types is not supported')
+        raise ValueError("Invalid page token for swgweb* log types is not supported")
 
-    for d in data[::-1 if strptime(data[0]['time']) > strptime(data[-1]['time']) else 1]:
+    for d in data[:: -1 if strptime(data[0]["time"]) > strptime(data[-1]["time"]) else 1]:
         # In some new log types like swgweb the data are sorted from recent to older
         # So let's not assume chronological order to be on the safe side..
-        tm = strptime(d['time'])
+        tm = strptime(d["time"])
 
         # Inject logtype field, it's needed by QRadar Event ID definition (defined in DSM editor)
         if GC_FIELD_LOGTYPE not in d:
@@ -523,11 +546,9 @@ def processLogEvents(ctx, conf, logType, data, nextPageToken, logTime, isSyslog)
         # NOTE Use logTime if QRadar has problems with decreasing time (as in swgweb and swgwebdlp)
         ingestLogEvent(ctx, d, conf._syslogDest, tm)
 
-        d[GC_FIELD_NEXTPAGETOKEN] = nextPageToken if nextPageToken is not None else ''
+        d[GC_FIELD_NEXTPAGETOKEN] = nextPageToken if nextPageToken is not None else ""
 
-        if any(a() for a in [lambda: logTime is None,
-                             lambda: tm > logTime,
-                             lambda: isOldLt]):
+        if any(a() for a in [lambda: logTime is None, lambda: tm > logTime, lambda: isOldLt]):
             # ^^^ This is to avoid the possible +1 sec skipping data problem (if no npt)
             logTime = tm
             lastLog = d
@@ -547,26 +568,27 @@ def rewindLogEvents(ctx, conf, logType):
         # This should be the default.
         # Clobber all the data in the file as the last resort! This is the important fool-proof method for
         # ultimate UI control on the cloud if some bug is suspected to hold new messages etc.
-        app.logger.warning('Hard-reset for "%s" initiated due to user request. '
-                           'The data will resume when new messages get available.' % logType)
-        lastLogFile.clobber(dtime, logtype=logType)     # type: ignore[union-attr]
+        app.logger.warning(f'Hard-reset for "{logType}" initiated due to user request. The data will resume when new messages get available.')
+        lastLogFile.clobber(dtime, logtype=logType)  # type: ignore[union-attr]
     else:
         # The soft reset mode is essential for testing by keeping the state around. It's used for auto-reset as well
-        app.logger.warning('Soft-reset for "%s" initiated due to user request. '
-                           'The data will resume when new messages get available.' % logType)
-        lastLogFile.updateError(conf, 'Soft-reset initiated due to user request. '  # type: ignore[union-attr]
-                                'Waiting for the new data becoming available starting from (see the \'time\' field below)',
-                                dtime, logType)
+        app.logger.warning(f'Soft-reset for "{logType}" initiated due to user request. The data will resume when new messages get available.')
+        lastLogFile.updateError(
+            conf,
+            "Soft-reset initiated due to user request. "  # type: ignore[union-attr]
+            "Waiting for the new data becoming available starting from (see the 'time' field below)",
+            dtime,
+            logType,
+        )
 
     return nextPageToken, dtime
 
 
 def drainLogEvents(ctx, conf, logType, logData=None, dtime=None, nextPageToken=None):
-
     status = conf.status[logType]
     r = None
 
-    isSyslog = (logData is not None)
+    isSyslog = logData is not None
 
     if conf._reset_time and not isSyslog:
         nextPageToken, dtime = rewindLogEvents(ctx, conf, logType)
@@ -576,7 +598,7 @@ def drainLogEvents(ctx, conf, logType, logData=None, dtime=None, nextPageToken=N
     try:
         raiseBackendError = False
         if raiseBackendError:
-            raise Exception('injectbackendfailure')
+            raise Exception("injectbackendfailure")
 
         i = 0
         drained = False
@@ -595,50 +617,49 @@ def drainLogEvents(ctx, conf, logType, logData=None, dtime=None, nextPageToken=N
 
                 # TODO If there is a hint from API that all data is drained can save the
                 # split second sleep and the extra request
-                url, endpoint, dataParams = RestParamsLogs(None,
-                                                           conf.host,
-                                                           conf.api_ver,
-                                                           logType,
-                                                           nextPageToken,
-                                                           logTime + timedelta(seconds=1))
-                logData, r = restCall(None,
-                                      url, endpoint, dataParams,
-                                      conf._auth_token.pswd,
-                                      (conf.proxies, conf._proxies_pswd.pswd),
-                                      conf.verify,
-                                      conf._username,
-                                      conf._password.pswd)
+                url, endpoint, dataParams = RestParamsLogs(None, conf.host, conf.api_ver, logType, nextPageToken, logTime + timedelta(seconds=1))
+                logData, r = restCall(
+                    None,
+                    url,
+                    endpoint,
+                    dataParams,
+                    conf._auth_token.pswd,
+                    (conf.proxies, conf._proxies_pswd.pswd),
+                    conf.verify,
+                    conf._username,
+                    conf._password.pswd,
+                )
                 i += 1
 
             lastLog = None
             nextPageToken = getAPIToken(logData, conf, logType)
 
-            data = logData['response']['data']
+            data = logData["response"]["data"]
             if len(data) == 0:
                 drained = True
             else:
                 logTime, lastLog = processLogEvents(ctx, conf, logType, data, nextPageToken, logTime, isSyslog)
 
             status.cntSuccess = status.cntSuccess + 1
-            status.lastMsg = 'ok'
+            status.lastMsg = "ok"
             if isSyslog:
                 status.lastLog = json.dumps(lastLog)
             else:
-                status.lastLog = lastLogFile.update(dtime, lastLog, logType)    # type: ignore[union-attr]
+                status.lastLog = lastLogFile.update(dtime, lastLog, logType)  # type: ignore[union-attr]
 
             flushLogEvents(ctx)
 
     except Exception as ex:
-        msg = 'Bitglass Log Event Polling: failed to fetch data "%s": %s' % (str(logType), ex)
+        msg = f'Bitglass Log Event Polling: failed to fetch data "{logType!s}": {ex}'
         # If no valid settings have been set, avoid polluting the log
         if SKIPPED_REQUEST_ERROR not in msg:
             app.logger.error(msg)
             r = ex
-            lastLogFile.updateError(conf, r, None, logType)     # type: ignore[union-attr]
+            lastLogFile.updateError(conf, r, None, logType)  # type: ignore[union-attr]
             status.cntError = status.cntError + 1
             status.lastMsg = str(ex)
 
-        status.lastLog = ''
+        status.lastLog = ""
 
     # NOTE  Last successful result has empty data now (drained), instead, could merge all data and return
     #       making it optional if ingestLogEvent is not set.. Without it, attaching data to result is rather useless
@@ -646,13 +667,12 @@ def drainLogEvents(ctx, conf, logType, logData=None, dtime=None, nextPageToken=N
     status.lastTime = logTime
     status.updateCount = conf.updateCount
 
-    conf.status['last'] = status
+    conf.status["last"] = status
 
     return logTime
 
 
-def transferLogs(ctx, conf, condition, logTypes=None, logData=None, dtime=None,
-                 npt=None, resetFence=datetime.utcnow().isoformat()):
+def transferLogs(ctx, conf, condition, logTypes=None, logData=None, dtime=None, npt=None, resetFence=datetime.utcnow().isoformat()):
     myConf = conf._deepcopy()
     condition.release()
 
@@ -661,27 +681,27 @@ def transferLogs(ctx, conf, condition, logTypes=None, logData=None, dtime=None,
             # Pull all the log types that have ever been pulled unless the specific log type list was provided (like in Phantom).
             # Merge with the currently specified ones
             # logTypes = log_types   # All possibly supported log types
-            h = lastLogFile.getHistoricLogTypeList()    # type: ignore[union-attr]
+            h = lastLogFile.getHistoricLogTypeList()  # type: ignore[union-attr]
             n = myConf.log_types
-            logTypes = h + list(set(n) - set(h))   # Whatever have been tried from the last reset plus currently requested
+            logTypes = h + list(set(n) - set(h))  # Whatever have been tried from the last reset plus currently requested
         else:
-            logTypes = myConf.log_types    # Only currently requested
+            logTypes = myConf.log_types  # Only currently requested
 
     logTime = {}
     if logData is None:
         for lt in logTypes:
-            logTime[lt] = drainLogEvents(ctx, myConf, lt, logData,
-                                         dtime[lt] if dtime is not None else None,
-                                         npt[lt] if npt is not None else None)
+            logTime[lt] = drainLogEvents(
+                ctx, myConf, lt, logData, dtime[lt] if dtime is not None else None, npt[lt] if npt is not None else None
+            )
     else:
         # syslog source
         # Make sure nextpagetoken is disabled
         myConf.useNextPageToken = False
-        lt = logData['response']['data'][0]['logtype']
+        lt = logData["response"]["data"][0]["logtype"]
         logTime[lt] = drainLogEvents(None, myConf, lt, logData=logData)
 
     condition.acquire()
-    myConf.status['updateCount'] = conf.updateCount
+    myConf.status["updateCount"] = conf.updateCount
 
     # Load the latest state for the UI and reset the read-once-reset-to-default config params
     conf.status = copy.deepcopy(myConf.status)
@@ -689,7 +709,7 @@ def transferLogs(ctx, conf, condition, logTypes=None, logData=None, dtime=None,
         if conf._isForeignConfigStore():
             conf.reset_fence = resetFence
             conf._save()
-        conf._reset_time = ''
+        conf._reset_time = ""
 
     # Increment by smallest delta to avoid repeating same entries
     # TODO Using microseconds=1 causes event duplication.. what is the minimum resolution to increment??
@@ -704,7 +724,7 @@ def transferLogs(ctx, conf, condition, logTypes=None, logData=None, dtime=None,
 def getLastLogTimeAndNpt(ctx, conf, logTypes=None):
     # Have to complicate things b/c the API doesn't support combining different log types
     dtime = {}
-    npt = {}    # type: ignore[var-annotated]
+    npt = {}  # type: ignore[var-annotated]
     now = datetime.utcnow()
     for lt in log_types:
         # = datetime.utcnow() + timedelta(days=-1)
@@ -715,19 +735,19 @@ def getLastLogTimeAndNpt(ctx, conf, logTypes=None):
         # The gap is caused by either: app down time or the log source being disabled in earlier app run
         # was greater than 30 days (default of 'log_initial')
         try:
-            if lastLogFile.get(logtype=lt):     # type: ignore[union-attr]
+            if lastLogFile.get(logtype=lt):  # type: ignore[union-attr]
                 try:
                     # Could be missing due to the old file format
-                    npt[lt] = lastLogFile.get('nextpagetoken', lt)  # type: ignore[union-attr]
-                    if npt[lt] == '':
+                    npt[lt] = lastLogFile.get("nextpagetoken", lt)  # type: ignore[union-attr]
+                    if npt[lt] == "":
                         npt[lt] = None
-                        app.logger.warning('Empty nextpagetoken found for log type %s (old lastlog format?)' % lt)
+                        app.logger.warning(f"Empty nextpagetoken found for log type {lt} (old lastlog format?)")
 
                 except Exception as ex:
                     npt[lt] = None
-                    app.logger.warning('Error "%s" retrieving nextpagetoken for log type %s' % (str(ex), lt))
+                    app.logger.warning(f'Error "{ex!s}" retrieving nextpagetoken for log type {lt}')
 
-                d = strptime(lastLogFile.get('time', lt))   # type: ignore[union-attr]
+                d = strptime(lastLogFile.get("time", lt))  # type: ignore[union-attr]
                 if dtime[lt] <= d:
                     dtime[lt] = d
                 else:
@@ -735,13 +755,11 @@ def getLastLogTimeAndNpt(ctx, conf, logTypes=None):
                     # NOTE: This still has an extremely remote possibility of data duplication
                     #       (no messages over the gap period is a necessary condition then - unpopulated gap)
                     npt[lt] = None
-                    app.logger.warning('Possible gap for log type %s from %s to %s' %
-                                       (str(lt),
-                                           d.strftime(TIME_FORMAT_LOG),
-                                           dtime[lt].strftime(TIME_FORMAT_LOG))
-                                       )
+                    app.logger.warning(
+                        f"Possible gap for log type {lt!s} from {d.strftime(TIME_FORMAT_LOG)} to {dtime[lt].strftime(TIME_FORMAT_LOG)}"
+                    )
             else:
-                app.logger.info('No lastlog data found for log type %s' % lt)
+                app.logger.info(f"No lastlog data found for log type {lt}")
 
         except Exception as ex:
             # Bad data in lastLogFile? Treat overlap as data corruption so exclude its possibility and warn
@@ -752,25 +770,24 @@ def getLastLogTimeAndNpt(ctx, conf, logTypes=None):
             # hence no chance to reset the data to good format unless due to a fluke of a very recent message.
             # Instead, do a soft reset
             dtime[lt] = now
-            app.logger.error('Probable gap for log type %s to %s due to BAD LAST LOG DATA: %s' %
-                             (str(lt),
-                                 dtime[lt].strftime(TIME_FORMAT_LOG),
-                                 ex)
-                             )
+            app.logger.error(f"Probable gap for log type {lt!s} to {dtime[lt].strftime(TIME_FORMAT_LOG)} due to BAD LAST LOG DATA: {ex}")
 
             # Re-write the file back to the good format
             # TODO If wishing to reduce missing a lot of data in favor of some overlap,
             #      may rely on the last log file mofification time minus polling period (which one? could have changed)
-            app.logger.warning('Auto-reset initiated due to bad last log data. '
-                               'The data will resume when new messages get available.')
-            lastLogFile.updateError(conf, 'Auto-reset initiated due to bad last log data. '     # type: ignore[union-attr]
-                                    'Waiting for the new data becoming available starting from (see the \'time\' field below)',
-                                    now, lt)
+            app.logger.warning("Auto-reset initiated due to bad last log data. The data will resume when new messages get available.")
+            lastLogFile.updateError(
+                conf,
+                "Auto-reset initiated due to bad last log data. "  # type: ignore[union-attr]
+                "Waiting for the new data becoming available starting from (see the 'time' field below)",
+                now,
+                lt,
+            )
 
             # Should never end up here again unless the file gets invalidated outside the app once more
 
         if npt[lt] is not None:
-            app.logger.info('Valid_nextpagetoken "%s" found for log type %s' % (npt[lt], lt))
+            app.logger.info(f'Valid_nextpagetoken "{npt[lt]}" found for log type {lt}')
 
     return dtime, npt
 
@@ -783,23 +800,17 @@ def PollLogs(ctx, conf, logTypes=None, condition=Condition(), resetFence=datetim
     pid = os.getpid()
     # tid = get_ident()
     tid = 0
-    app.logger.info('================================================================')
-    app.logger.info('Polling: start polling log events.. pid=%s, tid=%s' % (pid, tid))
-    app.logger.info('----------------------------------------------------------------')
+    app.logger.info("================================================================")
+    app.logger.info(f"Polling: start polling log events.. pid={pid}, tid={tid}")
+    app.logger.info("----------------------------------------------------------------")
 
-    isSyslog = all(a() for a in [lambda: '://' not in conf.api_url,
-                                 lambda: len(conf.api_url.split(':')) == 2])
+    isSyslog = all(a() for a in [lambda: "://" not in conf.api_url, lambda: len(conf.api_url.split(":")) == 2])
 
     res = None
     if isSyslog:
-        host, port = conf.api_url.split(':')
+        host, port = conf.api_url.split(":")
         # TODO: At least verify that sink_url is different to reduce the loop possibility sending back to itself
-        SyslogUDPHandler.start(transferLogs,
-                               host=host,
-                               port=int(port),
-                               conf=conf,
-                               condition=condition
-                               )
+        SyslogUDPHandler.start(transferLogs, host=host, port=int(port), conf=conf, condition=condition)
     else:
         dtime, npt = getLastLogTimeAndNpt(ctx, conf, logTypes)
 
@@ -813,13 +824,12 @@ def PollLogs(ctx, conf, logTypes=None, condition=Condition(), resetFence=datetim
 
         res = conf.status
 
-    app.logger.info('Polling: stop polling log events.. pid=%s, tid=%s' % (pid, tid))
-    app.logger.info('~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~')
+    app.logger.info(f"Polling: stop polling log events.. pid={pid}, tid={tid}")
+    app.logger.info("~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~")
     return res
 
 
 class bitglassapi:
-
     Initialize = Initialize
 
     # TODO Implement OverrideConfig(), it will also validate all settings (the validation is to be moved from UI)
@@ -847,14 +857,17 @@ class bitglassapi:
     def bgPushLogEvent(self, d, address, logTime):
         # Additional processing for the script
         from app import cli  # pylint: disable=E0401
+
         cli.pushLog(d, address, logTime)
 
     def bgFlushLogEvents(self):
         from app import cli  # pylint: disable=E0401
+
         cli.flushLogs()
 
     def bgLoadConfig(self, conf):
         from app import cli  # pylint: disable=E0401
+
         cli.loadConfiguration(conf)
 
 
@@ -875,7 +888,7 @@ class BitglassContext(dict):
 
         # This (test code) runs repeatedly in a thread instead of passing from real framework on repeated script invocation
         # The above means the Initialize() path called only once with empty dict (making it a partial scenario), unlike in Demisto
-        self.__init__(d)    # type: ignore[misc]
+        self.__init__(d)  # type: ignore[misc]
 
 
 context = None
@@ -887,7 +900,6 @@ context = None
 
 
 def startWorkerThread(conf, isDaemon=True, bgapi=None):
-
     Initialize(bgapi, _logger=app.logger, _conf=conf, context=context)
 
     condition = Condition()
@@ -901,14 +913,13 @@ def startWorkerThread(conf, isDaemon=True, bgapi=None):
 
 
 # Skip this part for the merged module support
-if __name__ == '__main__':
-
+if __name__ == "__main__":
     from app.cli import main
 
     Initialize(None)
 
     # Only for debugging full context cli variants so that can use one debug setting for all
-    if conf._isEnabled('debug'):
+    if conf._isEnabled("debug"):
         main(app.logger, conf, bitglassapi)
 
     # Start the worker thread explicitly if main() above didn't exit()
