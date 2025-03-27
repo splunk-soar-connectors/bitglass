@@ -1,21 +1,69 @@
 Splunk SOAR Bitglass
-Copyright (c) 2022 alexeiyur
+Copyright (c) 2022-2025 alexeiyur
 
-Third-party Software Attributions:
+Third Party Software Attributions:
 
-Library: Flask
-Version: 2.0.2
-License: BSD 3
-Copyright 2010 Pallets
-
-Library: beautifulsoup4
+Name: beautifulsoup4
 Version: 4.10.0
+Author: Leonard Richardson
 License: MIT
-Copyright 2004-2017 Leonard Richardson
-Copyright 2004-2019 Leonard Richardson
-Copyright 2018 Isaac Muse
 
-Library: requests
+Name: certifi
+Version: 2025.1.31
+Author: Kenneth Reitz
+License: MPL-2.0
+
+Name: chardet
+Version: 4.0.0
+Author: Mark Pilgrim
+License: LGPL
+
+Name: click
+Version: 8.1.8
+Author:
+License:
+
+Name: Flask
+Version: 2.0.2
+Author: Armin Ronacher
+License: BSD-3-Clause
+
+Name: idna
+Version: 2.10
+Author: Kim Davies
+License: BSD-like
+
+Name: itsdangerous
+Version: 2.2.0
+Author:
+License:
+
+Name: Jinja2
+Version: 3.0.3
+Author: Armin Ronacher
+License: BSD-3-Clause
+
+Name: MarkupSafe
+Version: 2.0.1
+Author: Armin Ronacher
+License: BSD-3-Clause
+
+Name: requests
 Version: 2.25.1
+Author: Kenneth Reitz
 License: Apache 2.0
-Kenneth Reitz
+
+Name: soupsieve
+Version: 2.6
+Author:
+License:
+
+Name: urllib3
+Version: 1.26.20
+Author: Andrey Petrov
+License: MIT
+
+Name: Werkzeug
+Version: 2.1.2
+Author: Armin Ronacher
+License: BSD-3-Clause
