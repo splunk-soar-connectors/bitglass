@@ -900,10 +900,6 @@
                 "input_file": "wheels/py3/Werkzeug-2.1.2-py3-none-any.whl"
             },
             {
-                "module": "chardet",
-                "input_file": "wheels/shared/chardet-4.0.0-py2.py3-none-any.whl"
-            },
-            {
                 "module": "click",
                 "input_file": "wheels/py3/click-8.1.8-py3-none-any.whl"
             },
@@ -926,10 +922,6 @@
             {
                 "module": "Werkzeug",
                 "input_file": "wheels/py3/Werkzeug-2.1.2-py3-none-any.whl"
-            },
-            {
-                "module": "chardet",
-                "input_file": "wheels/shared/chardet-4.0.0-py2.py3-none-any.whl"
             },
             {
                 "module": "click",
