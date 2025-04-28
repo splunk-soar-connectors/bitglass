@@ -1,7 +1,7 @@
 # Bitglass
 
 Publisher: Bitglass Inc. \
-Connector Version: 1.1.2 \
+Connector Version: 1.1.3 \
 Product Vendor: Bitglass Inc. \
 Product Name: Bitglass Phantom App \
 Minimum Product Version: 5.3.0
