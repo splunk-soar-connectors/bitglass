@@ -1,9 +1,9 @@
 # Bitglass
 
-Publisher: Bitglass Inc. \
-Connector Version: 1.1.3 \
-Product Vendor: Bitglass Inc. \
-Product Name: Bitglass Phantom App \
+Publisher: Bitglass Inc. <br>
+Connector Version: 1.1.3 <br>
+Product Vendor: Bitglass Inc. <br>
+Product Name: Bitglass Phantom App <br>
 Minimum Product Version: 5.3.0
 
 The app pulls Bitglass cloudaudit and access log data once configured and parses the specified DLP patterns from the asset configuration page
@@ -130,25 +130,26 @@ VARIABLE | REQUIRED | TYPE | DESCRIPTION
 **filter_access** | optional | string | DLP pattern for access |
 **enable_cloudaudit** | optional | boolean | Pull Bitglass CloudAudit logs : |
 **filter_cloudaudit** | optional | string | DLP pattern for CloudAudit |
+**verify_server_cert** | optional | boolean | Verify the TLS certificate presented by the Bitglass API |
 
 ### Supported Actions
 
-[test connectivity](#action-test-connectivity) - Validate the asset configuration for connectivity using supplied configuration \
-[on poll](#action-on-poll) - Polls for new pattern-matched Bitglass events used for other actions to act upon \
-[filter by dlp pattern](#action-filter-by-dlp-pattern) - Filter log artifacts by DLP pattern \
-[create update group](#action-create-update-group) - Create or update a group \
-[delete group](#action-delete-group) - Delete a group \
-[add user to group](#action-add-user-to-group) - Add risky user to a group \
-[remove user from group](#action-remove-user-from-group) - Remove risky user from a group \
-[create update user](#action-create-update-user) - Create or update user \
-[deactivate user](#action-deactivate-user) - Deactivate user \
+[test connectivity](#action-test-connectivity) - Validate the asset configuration for connectivity using supplied configuration <br>
+[on poll](#action-on-poll) - Polls for new pattern-matched Bitglass events used for other actions to act upon <br>
+[filter by dlp pattern](#action-filter-by-dlp-pattern) - Filter log artifacts by DLP pattern <br>
+[create update group](#action-create-update-group) - Create or update a group <br>
+[delete group](#action-delete-group) - Delete a group <br>
+[add user to group](#action-add-user-to-group) - Add risky user to a group <br>
+[remove user from group](#action-remove-user-from-group) - Remove risky user from a group <br>
+[create update user](#action-create-update-user) - Create or update user <br>
+[deactivate user](#action-deactivate-user) - Deactivate user <br>
 [reactivate user](#action-reactivate-user) - Reactivate user
 
 ## action: 'test connectivity'
 
 Validate the asset configuration for connectivity using supplied configuration
 
-Type: **test** \
+Type: **test** <br>
 Read only: **True**
 
 #### Action Parameters
@@ -163,7 +164,7 @@ No Output
 
 Polls for new pattern-matched Bitglass events used for other actions to act upon
 
-Type: **ingest** \
+Type: **ingest** <br>
 Read only: **True**
 
 Use this action to poll for and ingest new pattern-matched Bitglass log events. These events will be used as input for other playbook actions.
@@ -180,7 +181,7 @@ No Output
 
 Filter log artifacts by DLP pattern
 
-Type: **investigate** \
+Type: **investigate** <br>
 Read only: **True**
 
 Use this action to filter log artifacts by DLP patterns with a Python regex.
@@ -209,7 +210,7 @@ summary.total_objects_successful | numeric | | 1 |
 
 Create or update a group
 
-Type: **correct** \
+Type: **correct** <br>
 Read only: **False**
 
 Use this action to create or update group for risky users.
@@ -238,7 +239,7 @@ summary.total_objects_successful | numeric | | 1 |
 
 Delete a group
 
-Type: **contain** \
+Type: **contain** <br>
 Read only: **False**
 
 Use this action to delete group for risky users.
@@ -265,7 +266,7 @@ summary.total_objects_successful | numeric | | 1 |
 
 Add risky user to a group
 
-Type: **correct** \
+Type: **correct** <br>
 Read only: **False**
 
 Use this action to add user determined risky to a special group.
@@ -294,7 +295,7 @@ summary.total_objects_successful | numeric | | 1 |
 
 Remove risky user from a group
 
-Type: **contain** \
+Type: **contain** <br>
 Read only: **False**
 
 Use this action to remove user previously determined risky from the group.
@@ -323,7 +324,7 @@ summary.total_objects_successful | numeric | | 1 |
 
 Create or update user
 
-Type: **correct** \
+Type: **correct** <br>
 Read only: **False**
 
 Use this action to create or update user.
@@ -372,7 +373,7 @@ summary.total_objects_successful | numeric | | 1 |
 
 Deactivate user
 
-Type: **contain** \
+Type: **contain** <br>
 Read only: **False**
 
 Use this action to deactivate user.
@@ -399,7 +400,7 @@ summary.total_objects_successful | numeric | | 1 |
 
 Reactivate user
 
-Type: **correct** \
+Type: **correct** <br>
 Read only: **False**
 
 Use this action to reactivate user.
@@ -426,7 +427,7 @@ ______________________________________________________________________
 
 Auto-generated Splunk SOAR Connector documentation.
 
-Copyright 2025 Splunk Inc.
+Copyright 2026 Splunk Inc.
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.

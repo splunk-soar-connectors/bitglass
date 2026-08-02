@@ -1,4 +1,4 @@
-# Copyright (c) 2025 Splunk Inc.
+# Copyright (c) 2025-2026 Splunk Inc.
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -682,7 +682,7 @@ class BitglassConnector(BaseConnector):
 
         conf.api_url = config["api_url"]
 
-        conf.verify = config.get("verify_server_cert", False)
+        conf.verify = config.get("verify_server_cert", True)
 
         # Need to keep False for dev but avoiding security code scan flags by using this variable
         # TODO This is borrowed from external API settings but we need this local one separately set??
