@@ -10,7 +10,7 @@
     "python_version": "3",
     "product_version_regex": ".*",
     "publisher": "Bitglass Inc.",
-    "license": "Copyright (c) 2022-2025 alexeiyur",
+    "license": "Copyright (c) 2022-2026 alexeiyur",
     "app_version": "1.1.3",
     "utctime_updated": "2025-04-28T18:16:39.072875Z",
     "package_name": "phantom_bitglass",
@@ -73,6 +73,12 @@
             "data_type": "string",
             "default": "^PCI.*",
             "order": 9
+        },
+        "verify_server_cert": {
+            "description": "Verify the TLS certificate presented by the Bitglass API",
+            "data_type": "boolean",
+            "default": true,
+            "order": 10
         }
     },
     "actions": [
@@ -925,7 +931,7 @@
             },
             {
                 "module": "click",
-                "input_file": "wheels/py3/click-8.1.8-py3-none-any.whl"
+                "input_file": "wheels/py3/click-8.4.2-py3-none-any.whl"
             },
             {
                 "module": "itsdangerous",
